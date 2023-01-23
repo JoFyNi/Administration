@@ -4,17 +4,16 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
-public class Request {
-    private JFrame requestFrame;
+class Request {
     char status;
     String user;
     String email;
-    //List to hold "ressources.Request" objects
-    public static List<Request> requests = new ArrayList<>();
+
+    public Request() {
+    }
 
     public Request(char status, String user, String email) {
         this.status = status;
@@ -22,60 +21,73 @@ public class Request {
         this.email = email;
     }
 
-    public Request() {
-        new Request(status, user, email);
-        requestFrame = new JFrame("Requests");
-        requestFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        requestFrame.setSize(500, 300);
+    public char getStatus() {
+        return status;
     }
 
-    public static boolean getRequest() {
-        String csvFile = "src/main/db/request.csv";
-        String line = "";
-        String cvsSplitBy = ",";
-
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-
-            while ((line = br.readLine()) != null) {
-                // use comma as separator
-                String[] data = line.split(cvsSplitBy);
-                Request request = new Request();
-                request.status = data[0].charAt(0);
-                request.user = data[1];
-                request.email = data[2];
-                requests.add(request);
-            }
-
-            //sending requests list to displayRequest method
-            displayRequest(requests);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return true;
+    public void setStatus(char status) {
+        this.status = status;
     }
 
-    public static void displayRequest(List<Request> requests) {
-        System.out.println("ressources.Request");
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public static JFrame frame;
+    public static JTable tableTrue;
+    public static JTable tableFalse;
+    public static JTabbedPane tabbedPane;
+
+    public static void displayRequests(List<Request> requestsTrue, List<Request> requestsFalse) {
         // Create column names
-        String[] columnNames = {"status", "user", "email"};
-
+        String[] columnNamesTrue = {"status", "user", "email"};
+        String[] columnNamesFalse = {"status", "user", "email"};
         // Create data
-        Object[][] data = new Object[requests.size()][3];
-        for (int i = 0; i < requests.size(); i++) {
-            data[i][0] = requests.get(i).status;
-            data[i][1] = requests.get(i).user;
-            data[i][2] = requests.get(i).email;
+        Object[][] dataTrue = new Object[requestsTrue.size()][3];
+        for (int i = 0; i < requestsTrue.size(); i++) {
+            dataTrue[i][0] = requestsTrue.get(i).status;
+            dataTrue[i][1] = requestsTrue.get(i).user;
+            dataTrue[i][2] = requestsTrue.get(i).email;
+        }
+        Object[][] dataFalse = new Object[requestsFalse.size()][3];
+        for (int i = 0; i < requestsFalse.size(); i++) {
+            dataFalse[i][0] = requestsFalse.get(i).status;
+            dataFalse[i][1] = requestsFalse.get(i).user;
+            dataFalse[i][2] = requestsFalse.get(i).email;
         }
 
-        // Create a new table instance
-        JTable table = new JTable(data, columnNames);
-        JFrame frame = new JFrame("Requests");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JScrollPane scrollPane = new JScrollPane(table);
-        frame.add(scrollPane);
-        frame.pack();
-        frame.setSize(500,300);
-        frame.setVisible(true);
+
+        if (frame == null) {
+            // Create a new table instance
+            tableTrue = new JTable(dataTrue, columnNamesTrue);
+            tableFalse = new JTable(dataFalse, columnNamesFalse);
+            frame = new JFrame("Requests  [true " + requestsTrue.size() + " / false " + requestsFalse.size()+"]");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            tabbedPane = new JTabbedPane();
+            tabbedPane.addTab("True", new JScrollPane(tableTrue));
+            tabbedPane.addTab("False", new JScrollPane(tableFalse));
+            frame.add(tabbedPane);
+            frame.pack();
+            frame.setSize(500, 300);
+            frame.setVisible(true);
+        } else {
+            // updating the tables
+            tableTrue.setModel(new DefaultTableModel(dataTrue, columnNamesTrue));
+            tableFalse.setModel(new DefaultTableModel(dataFalse, columnNamesFalse));
+            // updating the counter from the title bar
+            frame.setTitle("Requests  [true " + requestsTrue.size() + " / false " + requestsFalse.size()+"]");
+        }
     }
 }

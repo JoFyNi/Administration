@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.*;
 
+import static ressources.Request.displayRequests;
+
 public class Bot {
     private String botName;
     private int botId;
@@ -25,13 +27,15 @@ public class Bot {
         TimerTask task = new TimerTask() {
             public void run() {
                 System.out.println("check for requests");
-                checkRequests();
-
+                updateRequests(requestsTrue, requestsFalse);
                 System.out.println("send requests");
                 sendRequests();
             }
         };
         timer.schedule(task, 0, 10000);
+    }
+
+    private void sendRequests() {
     }
 
     private void checkRequests() {
@@ -47,29 +51,29 @@ public class Bot {
                 request.email = data[2];
                 if(request.status == 't' || request.status == 'T') {
                     requestsTrue.add(request);
-                    System.out.println("request " + requestsTrue.add(request));
                 }else if(request.status == 'f' || request.status == 'F'){
                     requestsFalse.add(request);
-                    System.out.println("request " + requestsFalse.add(request));
-                } else {System.out.println("failed to parse");}
-
-                if(requestsTrue.size() > 200) {
-                    System.out.println("starting delete: Request limit reached (size above 200) -> " + requestsTrue.size());
-                    requestsTrue.remove(0);     // is this necessary? // is not working yet
-                }
-                if(requestsFalse.size() > 100) {
-                    System.out.println("starting delete false Request: Request limit reached (size above 100) -> " + requestsFalse.size());
-                    requestsFalse.remove(0);    // is this necessary? // is not working yet
-                }
+                } else {System.out.println("no more request");}
             }
-            System.out.println(requestsTrue.size());
-            System.out.println(requestsFalse.size());
+
+            System.out.println("true: " + requestsTrue.size() +"  false: " + requestsFalse.size());
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
             System.exit(1);
         }
+        getRequests(requestsTrue, requestsFalse);
+
     }
+    public void updateRequests(List<Request> requestsTrue, List<Request> requestsFalse){
+        requestsTrue.clear();
+        requestsFalse.clear();
+        checkRequests();
+    }
+    public void getRequests(List<Request> requestsTrue, List<Request> requestsFalse) {
+        displayRequests(requestsTrue, requestsFalse);
+    }
+
 
     // getters and setters
     public String getBotName() {
@@ -96,34 +100,38 @@ public class Bot {
         this.botType = botType;
     }
 
-    // method to run the bot
-    public void runBot() {
-        // code to run the bot goes here
+    public String getCsvFile() {
+        return csvFile;
+    }
+
+    public void setCsvFile(String csvFile) {
+        this.csvFile = csvFile;
+    }
+
+    public List<Request> getRequestsTrue() {
+        return requestsTrue;
+    }
+
+    public void setRequestsTrue(List<Request> requestsTrue) {
+        this.requestsTrue = requestsTrue;
+    }
+
+    public List<Request> getRequestsFalse() {
+        return requestsFalse;
+    }
+
+    public void setRequestsFalse(List<Request> requestsFalse) {
+        this.requestsFalse = requestsFalse;
     }
 
     // method to stop the bot
     public void stopBot() {
         Scanner scanner = new Scanner(System.in);
-        String exitLine = scanner.nextLine();
-        if  (exitLine == "exit") {
+        String exitLine = scanner.findInLine("Do you want to stop the bot? (y/n)");
+        if  (exitLine == "y") {
             System.exit(0);
         }
         // code to stop the bot goes here
-    }
-
-
-    public void getRequests() {
-        // get requests from users.csv
-        // list request with user id (name)
-        // list what kind of request it is
-        // installation request -> witch programm the user wants to install
-    }
-
-    public List<Request> sendRequests() {
-        // create a message for the Administrator ("new request")
-        // create a message for the user ("request accepted")
-        // create a message for the user ("request rejected")
-        return requestsTrue;
     }
 
     public void manageRequests() {
