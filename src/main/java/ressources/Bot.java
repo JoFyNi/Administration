@@ -12,8 +12,9 @@ public class Bot {
     private String botType;
     private String csvFile;
     //List to hold "Request" objects
-    List<Request> requestsTrue = new ArrayList<>();
-    List<Request> requestsFalse = new ArrayList<>();
+    List<Request> requestsPending = new ArrayList<>();
+    List<Request> requestsApproved = new ArrayList<>();
+    List<Request> requestsRejected = new ArrayList<>();
 
     public Bot(String botName, int botId, String botType, String csvFile) {
         this.botName = botName;
@@ -27,7 +28,7 @@ public class Bot {
         TimerTask task = new TimerTask() {
             public void run() {
                 System.out.println("check for requests");
-                updateRequests(requestsTrue, requestsFalse);
+                updateRequests(requestsPending, requestsApproved, requestsRejected);
                 System.out.println("send requests");
                 sendRequests();
             }
@@ -49,29 +50,32 @@ public class Bot {
                 request.status = data[0].charAt(0);
                 request.user = data[1];
                 request.email = data[2];
-                if(request.status == 't' || request.status == 'T') {
-                    requestsTrue.add(request);
-                }else if(request.status == 'f' || request.status == 'F'){
-                    requestsFalse.add(request);
+                if(request.status == 'w' || request.status == 'W') {
+                    requestsPending.add(request);
+                } else if(request.status == 't' || request.status == 'T'){
+                    requestsApproved.add(request);
+                } else if(request.status == 'f' || request.status == 'F'){
+                    requestsRejected.add(request);
                 } else {System.out.println("no more request");}
             }
 
-            System.out.println("true: " + requestsTrue.size() +"  false: " + requestsFalse.size());
+            System.out.println("pending: " + requestsPending.size() +"  approve: " + requestsApproved.size() + " rejected: " + requestsRejected.size());
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
             System.exit(1);
         }
-        getRequests(requestsTrue, requestsFalse);
+        getRequests(requestsPending, requestsApproved, requestsRejected);
 
     }
-    public void updateRequests(List<Request> requestsTrue, List<Request> requestsFalse){
-        requestsTrue.clear();
-        requestsFalse.clear();
+    public void updateRequests(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
+        requestsPending.clear();
+        requestsApproved.clear();
+        requestsRejected.clear();
         checkRequests();
     }
-    public void getRequests(List<Request> requestsTrue, List<Request> requestsFalse) {
-        displayRequests(requestsTrue, requestsFalse);
+    public void getRequests(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
+        displayRequests(requestsPending, requestsApproved, requestsRejected);
     }
 
 
@@ -108,20 +112,28 @@ public class Bot {
         this.csvFile = csvFile;
     }
 
-    public List<Request> getRequestsTrue() {
-        return requestsTrue;
+    public List<Request> requestsPending() {
+        return requestsPending;
     }
 
-    public void setRequestsTrue(List<Request> requestsTrue) {
-        this.requestsTrue = requestsTrue;
+    public void setRequestsPending(List<Request> requestsPending) {
+        this.requestsPending = requestsPending;
     }
 
-    public List<Request> getRequestsFalse() {
-        return requestsFalse;
+    public List<Request> getRequestsApproved() {
+        return requestsApproved;
     }
 
-    public void setRequestsFalse(List<Request> requestsFalse) {
-        this.requestsFalse = requestsFalse;
+    public void setRequestsApproved(List<Request> requestsApproved) {
+        this.requestsApproved = requestsApproved;
+    }
+
+    public List<Request> getRequestsRejected() {
+        return requestsRejected;
+    }
+
+    public void setRequestsRejected(List<Request> requestsRejected) {
+        this.requestsRejected = requestsRejected;
     }
 
     // method to stop the bot

@@ -46,48 +46,61 @@ class Request {
     }
 
     public static JFrame frame;
-    public static JTable tableTrue;
-    public static JTable tableFalse;
+    public static JTable tablePending;
+    public static JTable tableApproved;
+    public static JTable tableRejected;
+
     public static JTabbedPane tabbedPane;
 
-    public static void displayRequests(List<Request> requestsTrue, List<Request> requestsFalse) {
+    public static void displayRequests(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
         // Create column names
-        String[] columnNamesTrue = {"status", "user", "email"};
-        String[] columnNamesFalse = {"status", "user", "email"};
+        String[] columnNamesPending = {"status", "user", "email"};
+        String[] columnNamesApproved = {"status", "user", "email"};
+        String[] columnNamesRejected = {"status", "user", "email"};
+
         // Create data
-        Object[][] dataTrue = new Object[requestsTrue.size()][3];
-        for (int i = 0; i < requestsTrue.size(); i++) {
-            dataTrue[i][0] = requestsTrue.get(i).status;
-            dataTrue[i][1] = requestsTrue.get(i).user;
-            dataTrue[i][2] = requestsTrue.get(i).email;
+        Object[][] dataPending = new Object[requestsPending.size()][3];
+        for (int i = 0; i < requestsPending.size(); i++) {
+            dataPending[i][0] = requestsPending.get(i).status;
+            dataPending[i][1] = requestsPending.get(i).user;
+            dataPending[i][2] = requestsPending.get(i).email;
         }
-        Object[][] dataFalse = new Object[requestsFalse.size()][3];
-        for (int i = 0; i < requestsFalse.size(); i++) {
-            dataFalse[i][0] = requestsFalse.get(i).status;
-            dataFalse[i][1] = requestsFalse.get(i).user;
-            dataFalse[i][2] = requestsFalse.get(i).email;
+        Object[][] dataApproved = new Object[requestsApproved.size()][3];
+        for (int i = 0; i < requestsApproved.size(); i++) {
+            dataApproved[i][0] = requestsApproved.get(i).status;
+            dataApproved[i][1] = requestsApproved.get(i).user;
+            dataApproved[i][2] = requestsApproved.get(i).email;
+        }
+        Object[][] dataRejected = new Object[requestsRejected.size()][3];
+        for (int i = 0; i < requestsRejected.size(); i++) {
+            dataRejected[i][0] = requestsRejected.get(i).status;
+            dataRejected[i][1] = requestsRejected.get(i).user;
+            dataRejected[i][2] = requestsRejected.get(i).email;
         }
 
 
         if (frame == null) {
             // Create a new table instance
-            tableTrue = new JTable(dataTrue, columnNamesTrue);
-            tableFalse = new JTable(dataFalse, columnNamesFalse);
-            frame = new JFrame("Requests  [true " + requestsTrue.size() + " / false " + requestsFalse.size()+"]");
+            tablePending = new JTable(dataPending, columnNamesPending);
+            tableApproved = new JTable(dataRejected, columnNamesApproved);
+            tableRejected = new JTable(dataRejected, columnNamesRejected);
+            frame = new JFrame("Requests  [Pending " + requestsPending.size() + " / Approved " + requestsApproved.size() + " / Rejected " + requestsRejected.size() + "]");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             tabbedPane = new JTabbedPane();
-            tabbedPane.addTab("True", new JScrollPane(tableTrue));
-            tabbedPane.addTab("False", new JScrollPane(tableFalse));
+            tabbedPane.addTab("Pending", new JScrollPane(tablePending));
+            tabbedPane.addTab("Approved", new JScrollPane(tableApproved));
+            tabbedPane.addTab("Denied", new JScrollPane(tableRejected));
             frame.add(tabbedPane);
             frame.pack();
             frame.setSize(500, 300);
             frame.setVisible(true);
         } else {
             // updating the tables
-            tableTrue.setModel(new DefaultTableModel(dataTrue, columnNamesTrue));
-            tableFalse.setModel(new DefaultTableModel(dataFalse, columnNamesFalse));
+            tablePending.setModel(new DefaultTableModel(dataPending, columnNamesPending));
+            tableApproved.setModel(new DefaultTableModel(dataApproved, columnNamesApproved));
+            tableRejected.setModel(new DefaultTableModel(dataRejected, columnNamesRejected));
             // updating the counter from the title bar
-            frame.setTitle("Requests  [true " + requestsTrue.size() + " / false " + requestsFalse.size()+"]");
+            frame.setTitle("Requests  [Pending " + requestsPending.size() + " / Approved " + requestsApproved.size() +" / Rejected " + requestsRejected.size() + "]");
         }
     }
 }
