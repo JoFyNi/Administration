@@ -84,7 +84,7 @@ class Request {
             tablePending = new JTable(dataPending, columnNamesPending);
             tableApproved = new JTable(dataRejected, columnNamesApproved);
             tableRejected = new JTable(dataRejected, columnNamesRejected);
-            frame = new JFrame("Requests  [Pending " + requestsPending.size() + " / Approved " + requestsApproved.size() + " / Rejected " + requestsRejected.size() + "]");
+            frame = new JFrame("Requests:  [Pending " + requestsPending.size() + " / Approved " + requestsApproved.size() + " / Rejected " + requestsRejected.size() + "]");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             tabbedPane = new JTabbedPane();
             tabbedPane.addTab("Pending", new JScrollPane(tablePending));
@@ -100,7 +100,7 @@ class Request {
             tableApproved.setModel(new DefaultTableModel(dataApproved, columnNamesApproved));
             tableRejected.setModel(new DefaultTableModel(dataRejected, columnNamesRejected));
             // updating the counter from the title bar
-            frame.setTitle("Requests  [Pending " + requestsPending.size() + " / Approved " + requestsApproved.size() +" / Rejected " + requestsRejected.size() + "]");
+            frame.setTitle("Requests:  [Pending " + requestsPending.size() + " / Approved " + requestsApproved.size() +" / Rejected " + requestsRejected.size() + "]");
         }
     }
 }

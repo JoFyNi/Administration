@@ -33,7 +33,7 @@ public class Bot {
                 sendRequests();
             }
         };
-        timer.schedule(task, 0, 10000);
+        timer.schedule(task, 0, 10000);     // run all 10 seconds
     }
 
     private void sendRequests() {
@@ -50,11 +50,11 @@ public class Bot {
                 request.status = data[0].charAt(0);
                 request.user = data[1];
                 request.email = data[2];
-                if(request.status == 'w' || request.status == 'W') {
+                if(request.status == 'n' || request.status == 'N') {            // new Request
                     requestsPending.add(request);
-                } else if(request.status == 't' || request.status == 'T'){
+                } else if(request.status == 't' || request.status == 'T'){      // approved Request
                     requestsApproved.add(request);
-                } else if(request.status == 'f' || request.status == 'F'){
+                } else if(request.status == 'f' || request.status == 'F'){      // rejected Request
                     requestsRejected.add(request);
                 } else {System.out.println("no more request");}
             }
