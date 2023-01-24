@@ -2,6 +2,8 @@ package ressources;
 
 import Clients.user;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
@@ -15,7 +17,7 @@ public class connector {
     private Vector<user>userList;
     public connector(Main main) {
         try {
-            String msg = "Hello";
+            String msg = "check";
             InetAddress mcastaddr = InetAddress.getByName(multicastIP);
             InetSocketAddress group = new InetSocketAddress(mcastaddr, multicastPORT);
             NetworkInterface netIf = NetworkInterface.getByName("bge0");
@@ -32,6 +34,22 @@ public class connector {
             throw new RuntimeException(e);
         }
     }
+
+    public static void getInformation(String clientInfo) throws IOException {
+        System.out.println(clientInfo);
+        File clientInfoFile = new File("C:\\Users\\j.nievelstein\\Java\\Administration\\src\\main\\resources\\clientInfos.txt");
+        FileWriter fileWriter = new FileWriter(clientInfoFile, true);
+        fileWriter.append(clientInfo);
+        fileWriter.append("\n");
+        fileWriter.close();
+    }
+    public static InetAddress getByAddress(String host, byte[] addr) throws UnknownHostException {
+        System.out.println("Host Name: "+ host);
+        System.out.println("IP Address: "+ addr);
+        return InetAddress.getByAddress(host, addr);
+    }
+
+
     public static void run() {
         while (true) {
             try {
