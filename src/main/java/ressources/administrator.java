@@ -63,13 +63,14 @@ public class administrator {
     public static void displayPending(List<Request> requestsPending) {
         System.out.println("displayPending");
         // Create column names
-        String[] columnNamesPending = {"status", "user", "email"};
+        String[] columnNamesPending = {"status", "user", "email", "request"};
         // Create data for each dataColumns in the table
-        Object[][] dataPending = new Object[requestsPending.size()][3];
+        Object[][] dataPending = new Object[requestsPending.size()][4];
         for (int i = 0; i < requestsPending.size(); i++) {
             dataPending[i][0] = requestsPending.get(i).status;
             dataPending[i][1] = requestsPending.get(i).user;
             dataPending[i][2] = requestsPending.get(i).email;
+            dataPending[i][3] = requestsPending.get(i).requestTag;
         }
 
 
@@ -101,7 +102,7 @@ public class administrator {
                             public void actionPerformed(ActionEvent e) {
                                 if (e.getSource()==approve) {
                                     answer = "approve";
-                                    processAnswer(requestsPending, requestsPending.get(1).getUser());
+                                    processAnswer(requestsPending, requestsPending.get(1).user);
                                 }
                             }
                         });
@@ -136,7 +137,7 @@ public class administrator {
             tabbedPane = new JTabbedPane();
             tabbedPane.addTab("Pending", new JScrollPane(tablePending));
             requestFrame.add(tabbedPane);
-            requestFrame.setSize(500, 800);
+            requestFrame.setSize(600, 800);
             requestFrame.pack();
             requestFrame.setVisible(true);
         } else {

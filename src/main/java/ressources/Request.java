@@ -1,48 +1,25 @@
 package ressources;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-class Request {
+public class Request {
     char status;
     String user;
     String email;
+    String requestTag;
 
+    public Request(String test) {
+    }
     public Request() {
     }
 
-    public Request(char status, String user, String email) {
+    public Request(char status, String user, String email, String requestTag) {
         this.status = status;
         this.user = user;
         this.email = email;
-    }
-
-    public char getStatus() {
-        return status;
-    }
-
-    public void setStatus(char status) {
-        this.status = status;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+        this.requestTag = requestTag;
     }
 
     public static JFrame frame;
@@ -54,28 +31,31 @@ class Request {
 
     public static void displayRequests(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
         // Create column names
-        String[] columnNamesPending = {"status", "user", "email"};
-        String[] columnNamesApproved = {"status", "user", "email"};
-        String[] columnNamesRejected = {"status", "user", "email"};
+        String[] columnNamesPending = {"status", "user", "email", "request"};
+        String[] columnNamesApproved = {"status", "user", "email", "request"};
+        String[] columnNamesRejected = {"status", "user", "email", "request"};
 
         // Create data for each dataColumns in the table
-        Object[][] dataPending = new Object[requestsPending.size()][3];
+        Object[][] dataPending = new Object[requestsPending.size()][4];
         for (int i = 0; i < requestsPending.size(); i++) {
             dataPending[i][0] = requestsPending.get(i).status;
             dataPending[i][1] = requestsPending.get(i).user;
             dataPending[i][2] = requestsPending.get(i).email;
+            dataPending[i][3] = requestsPending.get(i).requestTag;
         }
-        Object[][] dataApproved = new Object[requestsApproved.size()][3];
+        Object[][] dataApproved = new Object[requestsApproved.size()][4];
         for (int i = 0; i < requestsApproved.size(); i++) {
             dataApproved[i][0] = requestsApproved.get(i).status;
             dataApproved[i][1] = requestsApproved.get(i).user;
             dataApproved[i][2] = requestsApproved.get(i).email;
+            dataApproved[i][3] = requestsApproved.get(i).requestTag;
         }
-        Object[][] dataRejected = new Object[requestsRejected.size()][3];
+        Object[][] dataRejected = new Object[requestsRejected.size()][4];
         for (int i = 0; i < requestsRejected.size(); i++) {
             dataRejected[i][0] = requestsRejected.get(i).status;
             dataRejected[i][1] = requestsRejected.get(i).user;
             dataRejected[i][2] = requestsRejected.get(i).email;
+            dataRejected[i][3] = requestsRejected.get(i).requestTag;
         }
 
 
@@ -95,7 +75,7 @@ class Request {
             tabbedPane.addTab("Rejected", new JScrollPane(tableRejected));
             frame.add(tabbedPane);
             frame.pack();
-            frame.setSize(500, 800);
+            frame.setSize(600, 800);
             frame.setVisible(true);
         } else {
             // updating the tables

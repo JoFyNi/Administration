@@ -6,6 +6,7 @@ import java.util.*;
 
 import static ressources.Request.displayRequests;
 import static ressources.administrator.displayPending;
+import static ressources.connection.*;
 
 public class Bot {
     private String botName;
@@ -13,9 +14,7 @@ public class Bot {
     private String botType;
     private String csvFile;
     //List to hold "Request" objects
-    List<Request> requestsPending = new ArrayList<>();
-    List<Request> requestsApproved = new ArrayList<>();
-    List<Request> requestsRejected = new ArrayList<>();
+
 
     public Bot(String botName, int botId, String botType, String csvFile) {
         this.botName = botName;
@@ -30,7 +29,7 @@ public class Bot {
         TimerTask task = new TimerTask() {
             public void run() {
                 System.out.println("connect");
-                connector.run();
+                //connector.run();
                 System.out.println("check for requests");
                 updateRequests(requestsPending, requestsApproved, requestsRejected);
             }
@@ -49,6 +48,7 @@ public class Bot {
                 request.status = data[0].charAt(0);
                 request.user = data[1];
                 request.email = data[2];
+                request.requestTag = data[3];
                 if(request.status == 'n' || request.status == 'N') {            // new Request
                     sendRequests(requestsPending, request.user);
                     requestsPending.add(request);
@@ -88,65 +88,5 @@ public class Bot {
 
         message = "Hello " + user;
         System.out.println(message);
-    }
-
-
-
-
-    // getters and setters -> for later use
-    public String getBotName() {
-        return botName;
-    }
-
-    public void setBotName(String botName) {
-        this.botName = botName;
-    }
-
-    public int getBotId() {
-        return botId;
-    }
-
-    public void setBotId(int botId) {
-        this.botId = botId;
-    }
-
-    public String getBotType() {
-        return botType;
-    }
-
-    public void setBotType(String botType) {
-        this.botType = botType;
-    }
-
-    public String getCsvFile() {
-        return csvFile;
-    }
-
-    public void setCsvFile(String csvFile) {
-        this.csvFile = csvFile;
-    }
-
-    public List<Request> requestsPending() {
-        return requestsPending;
-    }
-
-    public void setRequestsPending(List<Request> requestsPending) {
-        this.requestsPending = requestsPending;
-    }
-
-    public List<Request> getRequestsApproved() {
-        return requestsApproved;
-    }
-
-    public void setRequestsApproved(List<Request> requestsApproved) {
-        this.requestsApproved = requestsApproved;
-    }
-
-    public List<Request> getRequestsRejected() {
-        return requestsRejected;
-    }
-
-    public void setRequestsRejected(List<Request> requestsRejected) {
-        this.requestsRejected = requestsRejected;
     }
 }

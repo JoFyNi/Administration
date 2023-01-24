@@ -1,26 +1,46 @@
 package ressources;
 
+import Clients.user;
+
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.MulticastSocket;
-import java.util.StringTokenizer;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 import static ressources.connection.*;
 
 public class connector {
     private static MulticastSocket mySocket;
+    private Main main;
+    private Vector<user>userList;
 
-    public connector() {
+    public connector(Main main) {
 
+        try {
+            String msg = "Hello";
+            InetAddress mcastaddr = InetAddress.getByName(multicastIP);
+            InetSocketAddress group = new InetSocketAddress(mcastaddr, multicastPORT);
+            NetworkInterface netIf = NetworkInterface.getByName("bge0");
+            mySocket = new MulticastSocket(multicastPORT);
+            mySocket.joinGroup(new InetSocketAddress(mcastaddr, 0), netIf);
+            byte[] msgBytes = msg.getBytes(StandardCharsets.UTF_8);
+            DatagramPacket hi = new DatagramPacket(msgBytes, msgBytes.length, group);
+            mySocket.send(hi);
+            // get their responses!
+            byte[] buf = new byte[1000];
+            DatagramPacket recv = new DatagramPacket(buf, buf.length);
+            mySocket.receive(recv);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
-
     public static void run() {
         while (true) {
             try {
                 byte[] buffer = packageReceive();
                 process(buffer);
 
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -33,7 +53,7 @@ public class connector {
         return buffer;
     }
 
-    public static void process(byte[] buffer) {
+    public static void process(byte[] buffer) throws InterruptedException {
         String message = new String(buffer);
         message = message.trim();
 
@@ -44,6 +64,8 @@ public class connector {
         if (t1.equals(connectionOnline)) {
             // get connection to clients
         } else if (t1.equals(connectionBreak)) {
+            Thread.sleep(breakTime);
+            process(buffer);
             // do something wehen then connection break
         } else if (t1.equals(privat)) {
             String t3 = token.nextToken();
