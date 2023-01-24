@@ -25,12 +25,20 @@ For what you can use it:
 
 
 Request Frame that lists all requests (n=Pending/ t=Approved/ f=Rejected):
+
 ![img.png](img.png)
 
+
+
 Request Frame for the new request (Pending):
+
 ![img_1.png](img_1.png)
 
+
+
 Frame for a new Request:
+
 ![img_2.png](img_2.png)
+
 ![img_3.png](img_3.png)
 
