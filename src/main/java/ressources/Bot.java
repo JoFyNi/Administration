@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.util.*;
 
 import static ressources.Request.displayRequests;
+import static ressources.administrator.displayPending;
 
 public class Bot {
     private String botName;
@@ -23,20 +24,18 @@ public class Bot {
         this.csvFile = csvFile;
     }
 
+
     public void startBot() {
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             public void run() {
+                System.out.println("connect");
+                connector.run();
                 System.out.println("check for requests");
                 updateRequests(requestsPending, requestsApproved, requestsRejected);
-                System.out.println("send requests");
-                sendRequests();
             }
         };
         timer.schedule(task, 0, 10000);     // run all 10 seconds
-    }
-
-    private void sendRequests() {
     }
 
     private void checkRequests() {
@@ -51,6 +50,7 @@ public class Bot {
                 request.user = data[1];
                 request.email = data[2];
                 if(request.status == 'n' || request.status == 'N') {            // new Request
+                    sendRequests(requestsPending, request.user);
                     requestsPending.add(request);
                 } else if(request.status == 't' || request.status == 'T'){      // approved Request
                     requestsApproved.add(request);
@@ -58,15 +58,14 @@ public class Bot {
                     requestsRejected.add(request);
                 } else {System.out.println("no more request");}
             }
-
-            System.out.println("pending: " + requestsPending.size() +"  approve: " + requestsApproved.size() + " rejected: " + requestsRejected.size());
+            System.out.println("pending: " + requestsPending.size() +"  approve: " + requestsApproved.size() + "  rejected: " + requestsRejected.size());
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
             System.exit(1);
         }
         getRequests(requestsPending, requestsApproved, requestsRejected);
-
+        displayPending(requestsPending);
     }
     public void updateRequests(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
         requestsPending.clear();
@@ -79,7 +78,22 @@ public class Bot {
     }
 
 
-    // getters and setters
+    private void sendRequests(List<Request> requestsPending, String user) {
+        System.out.println("sending requests to Administrator");
+        administrator.getRequests(requestsPending, user);
+    }
+
+    public static void startInstallationOnClient(List<Request> requestsPending, String user) {
+        String message;
+
+        message = "Hello " + user;
+        System.out.println(message);
+    }
+
+
+
+
+    // getters and setters -> for later use
     public String getBotName() {
         return botName;
     }
@@ -134,20 +148,5 @@ public class Bot {
 
     public void setRequestsRejected(List<Request> requestsRejected) {
         this.requestsRejected = requestsRejected;
-    }
-
-    // method to stop the bot
-    public void stopBot() {
-        Scanner scanner = new Scanner(System.in);
-        String exitLine = scanner.findInLine("Do you want to stop the bot? (y/n)");
-        if  (exitLine == "y") {
-            System.exit(0);
-        }
-        // code to stop the bot goes here
-    }
-
-    public void manageRequests() {
-        // sort requests by user id (name) and type
-        // take requests from users and put it into a list of requests, displayed on a table inside a frame
     }
 }
