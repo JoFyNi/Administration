@@ -79,6 +79,7 @@ public class user {
     }
 
     public static void main(String[] args) throws IOException {
-        createRequest();
+        user user = new user();
+        user.createRequest();
     }
 }
