@@ -39,7 +39,7 @@ public class connector {
 
     public static void getInformation(String clientInfo) throws IOException {
         System.out.println(clientInfo);
-        File clientInfoFile = new File("C:\\Users\\j.nievelstein\\Java\\Administration\\src\\main\\resources\\clientInfos.txt");
+        File clientInfoFile = new File("src/main/resources/clientInfos.txt");
         FileWriter fileWriter = new FileWriter(clientInfoFile, true);
         fileWriter.append(clientInfo);
         fileWriter.append("\n");
@@ -50,7 +50,6 @@ public class connector {
         System.out.println("IP Address: "+ addr);
         return InetAddress.getByAddress(host, addr);
     }
-
 
     public static void run() {
         while (true) {
