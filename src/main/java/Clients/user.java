@@ -1,9 +1,17 @@
 package Clients;
 
+import ressources.connector;
+
 import javax.swing.*;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.util.Date;
 import java.util.Scanner;
+
+import static ressources.connector.getInformation;
 
 public class user {
     private static String csvFile = "src/main/db/fourHeader.csv";
@@ -63,6 +71,14 @@ public class user {
             } else {
                 try {
                     addRequest(requestTag);
+
+                    InetAddress ip=InetAddress.getLocalHost();
+                    connector.getByAddress(ip.getHostName(), ip.getAddress());
+
+                    Date date = new Date();
+                    String clientInformation = name + " , " + email + " , " + message + " , " + Inet4Address.getLocalHost() + " , " + date + "\n";
+                    getInformation(clientInformation);
+
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
