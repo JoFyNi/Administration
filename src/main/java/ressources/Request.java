@@ -58,7 +58,7 @@ class Request {
         String[] columnNamesApproved = {"status", "user", "email"};
         String[] columnNamesRejected = {"status", "user", "email"};
 
-        // Create data
+        // Create data for each dataColumns in the table
         Object[][] dataPending = new Object[requestsPending.size()][3];
         for (int i = 0; i < requestsPending.size(); i++) {
             dataPending[i][0] = requestsPending.get(i).status;
@@ -84,15 +84,18 @@ class Request {
             tablePending = new JTable(dataPending, columnNamesPending);
             tableApproved = new JTable(dataRejected, columnNamesApproved);
             tableRejected = new JTable(dataRejected, columnNamesRejected);
+            tablePending.setEnabled(false);     // set columns/ rows not Edible   change if onclick is created
+            tableApproved.setEnabled(false);    // set columns/ rows not Edible   change if onclick is created
+            tableRejected.setEnabled(false);    // set columns/ rows not Edible   change if onclick is created
             frame = new JFrame("Requests:  [Pending " + requestsPending.size() + " / Approved " + requestsApproved.size() + " / Rejected " + requestsRejected.size() + "]");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             tabbedPane = new JTabbedPane();
             tabbedPane.addTab("Pending", new JScrollPane(tablePending));
             tabbedPane.addTab("Approved", new JScrollPane(tableApproved));
-            tabbedPane.addTab("Denied", new JScrollPane(tableRejected));
+            tabbedPane.addTab("Rejected", new JScrollPane(tableRejected));
             frame.add(tabbedPane);
             frame.pack();
-            frame.setSize(500, 300);
+            frame.setSize(500, 800);
             frame.setVisible(true);
         } else {
             // updating the tables
