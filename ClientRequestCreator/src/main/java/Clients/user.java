@@ -1,32 +1,40 @@
 package Clients;
 
-import ressources.connector;
+import ressources.Bot;
 
 import javax.swing.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.Inet4Address;
-import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Date;
-import java.util.Scanner;
 
-import static ressources.connector.getInformation;
+import static ressources.Bot.getInformation;
 
 public class user {
-    private static String csvFile = "src/main/db/fourHeader.csv";
+    private static final String csvFile = "src/main/db/fourHeader.csv";
 
     public user() {}
 
     private static String name;
     private static String email;
-    private static String message;
+    private static String path;
+    private static final InetAddress ip;
+    static {
+        try {
+            ip = Inet4Address.getLocalHost();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private static final Date currentDate = new Date();
     public static void createRequest() throws IOException  {
 
 
         JDialog dialog = new JDialog();
         dialog.setTitle("request");
-        dialog.setSize(400, 300);
+        dialog.setSize(500, 600);
         dialog.setLocationRelativeTo(null);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
@@ -39,8 +47,8 @@ public class user {
         JTextField emailField = new JTextField(20);
 
         JPanel messengePanel = new JPanel();
-        JLabel messageLabel = new JLabel("enter Message: ");
-        JTextArea messageField = new JTextArea("", 5, 20);
+        JLabel messageLabel = new JLabel("select the .exe you want to have installed: ");
+        JFileChooser fileChooser = new JFileChooser();
 
         JButton sendButton = new JButton("Send");
         namePanel.add(nameLabel);
@@ -50,7 +58,7 @@ public class user {
         emailPanel.add(emailField);
 
         messengePanel.add(messageLabel);
-        messengePanel.add(messageField);
+        messengePanel.add(fileChooser);
 
         dialog.add(namePanel);
         dialog.add(emailPanel);
@@ -63,21 +71,19 @@ public class user {
         sendButton.addActionListener(e -> {
             name = nameField.getText();
             email= emailField.getText();
-            message = messageField.getText();
-            String requestTag = "n," + name + "," + email + "," + message;
+            path = fileChooser.getSelectedFile().getAbsolutePath();
+            System.out.println(path);
 
-            if (name.equals("") || email.equals("") || message.equals("")) {
+            if (name.equals("") || email.equals("") || path.equals("")) {
                 JOptionPane.showMessageDialog(null, "Please fill all fields");
             } else {
                 try {
-                    addRequest(requestTag);
+                    addRequest("n," + name + ", " +  email + ", " + path + ", " + ip.getHostName() + ", " + currentDate +"\n");
 
-                    InetAddress ip=InetAddress.getLocalHost();
-                    connector.getByAddress(ip.getHostName(), ip.getAddress());
+                    Bot.getByAddress(ip.getHostName(), ip.getAddress());
 
-                    Date date = new Date();
-                    String clientInformation = name + " , " + email + " , " + message + " , " + Inet4Address.getLocalHost() + " , " + date + "\n";
-                    getInformation(clientInformation);
+                    String clientInformation = name + " , " + email + " , " + path + " , " + Inet4Address.getLocalHost() + " , " + currentDate + "\n";
+                    getInformation(clientInformation, Runtime.getRuntime().availableProcessors(), Runtime.getRuntime().freeMemory(), Runtime.getRuntime().totalMemory());
 
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
@@ -96,6 +102,6 @@ public class user {
 
     public static void main(String[] args) throws IOException {
         user user = new user();
-        user.createRequest();
+        createRequest();
     }
 }

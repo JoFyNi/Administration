@@ -1,5 +1,7 @@
 package ressources;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -7,52 +9,65 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Date;
+import java.io.File;
 import java.util.List;
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static ressources.Bot.startInstallationOnClient;
 
-public class Request {
-    char status;
-    String user;
-    String email;
-    String path;
-    String host;
-    String ip;
-    String currentDate;
+public class administrator {
+    private String admin = "admin";
+    private int adminID = 1111;
+    private String adminPassword = "123456";
+    private String csvFile;
     static Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     static char[] newStatus = {'t','f','n'};
 
-
-    public Request(String test) {
-    }
-    public Request() {
-    }
-
-    public Request(char status, String user, String email, String path, String host, String currentDate) {
-        this.status = status;
-        this.user = user;
-        this.email = email;
-        this.path = path;
-        this.host = host;
-        this.currentDate = currentDate;
+    public void startAdmin() {
+        java.util.Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            public void run() {
+                System.out.println("check for requests");
+                new administrator(admin, adminID, adminPassword, csvFile);
+            }
+        };
+        timer.schedule(task, 0, 10000);     // run all 10 seconds
     }
 
-    public static JFrame frame;
+    public static String answer = "pending";
+
+    public administrator(String admin, int adminID, String adminPassword, String csvFile) {
+        this.admin = admin;
+        this.adminID = adminID;
+        this.adminPassword = adminPassword;
+        this.csvFile = csvFile;
+
+        System.out.println("admin " + admin + "  adminID " + adminID + "  adminPassword " + adminPassword);
+    }
+
+
+    public static void getRequests(List<Request> requestsPending, String user){
+        System.out.println("Request applied to administrator");
+        displayPending(requestsPending);
+        // verarbeiten -> auswahl Append or deny
+        // rücksignal/ rückmeldung -> bot, startet methode startInstallationOnClient(...request...beschreibung(programm)) -> client erhält signal -> installation -> anfrage wird gelöscht da, fertig
+        //
+    }
+
+    public static void processAnswer(List<Request> requestsPending, String user){
+        System.out.println(user);
+        //Bot.startInstallationOnClient(requestsPending, checkUser);
+        // rücksignal/ rückmeldung -> bot, startet methode startInstallationOnClient(...request...beschreibung(programm)) -> client erhält signal -> installation -> anfrage wird gelöscht da, fertig
+    }
+
+    public static JFrame requestFrame;
     public static JTable tablePending;
-    public static JTable tableApproved;
-    public static JTable tableRejected;
     public static JTabbedPane tabbedPane;
-    public static String setRequest;
 
-    public static void displayRequests(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
+    public static void displayPending(List<Request> requestsPending) {
         // Create column names
         String[] columnNamesPending = {"status", "user", "email", "path", "host", "date"};
-        String[] columnNamesApproved = {"status", "user", "email", "path", "host", "date"};
-        String[] columnNamesRejected = {"status", "user", "email", "path", "host", "date"};
-
         // Create data for each dataColumns in the table
         Object[][] dataPending = new Object[requestsPending.size()][6];
         for (int i = 0; i < requestsPending.size(); i++) {
@@ -63,43 +78,18 @@ public class Request {
             dataPending[i][4] = requestsPending.get(i).host;
             dataPending[i][5] = requestsPending.get(i).currentDate;
         }
-        Object[][] dataApproved = new Object[requestsApproved.size()][6];
-        for (int i = 0; i < requestsApproved.size(); i++) {
-            dataApproved[i][0] = requestsApproved.get(i).status;
-            dataApproved[i][1] = requestsApproved.get(i).user;
-            dataApproved[i][2] = requestsApproved.get(i).email;
-            dataApproved[i][3] = requestsApproved.get(i).path;
-            dataPending[i][4] = requestsPending.get(i).host;
-            dataPending[i][5] = requestsPending.get(i).currentDate;
-        }
-        Object[][] dataRejected = new Object[requestsRejected.size()][6];
-        for (int i = 0; i < requestsRejected.size(); i++) {
-            dataRejected[i][0] = requestsRejected.get(i).status;
-            dataRejected[i][1] = requestsRejected.get(i).user;
-            dataRejected[i][2] = requestsRejected.get(i).email;
-            dataRejected[i][3] = requestsRejected.get(i).path;
-            dataPending[i][4] = requestsPending.get(i).host;
-            dataPending[i][5] = requestsPending.get(i).currentDate;
-        }
 
-        if (frame == null) {
+
+        if (requestFrame == null) {
             // Create a new table instance
             tablePending = new JTable(dataPending, columnNamesPending);
-            tableApproved = new JTable(dataRejected, columnNamesApproved);
-            tableRejected = new JTable(dataRejected, columnNamesRejected);
 
-            frame = new JFrame("Requests:  [Pending " + requestsPending.size() + " / Approved " + requestsApproved.size() + " / Rejected " + requestsRejected.size() + "]");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            tabbedPane = new JTabbedPane();
-            tabbedPane.addTab("Pending", new JScrollPane(tablePending));
-            tabbedPane.addTab("Approved", new JScrollPane(tableApproved));
-            tabbedPane.addTab("Rejected", new JScrollPane(tableRejected));
             tablePending.addMouseListener(new MouseAdapter() {
                 JPopupMenu popupMenu = new JPopupMenu();
                 JMenuItem approve = new JMenuItem("approve");
                 JMenuItem reject = new JMenuItem("reject");
                 JMenuItem copyPathItem = new JMenuItem("copy path");
-
+                JLabel label = new JLabel();
                 String selectedValue = null;;
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -117,7 +107,7 @@ public class Request {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 if (e.getSource()==approve) {
-                                    setRequest = "approve";
+                                    answer = "approve";
 
                                     int selectedRow = tablePending.getSelectedRow();
                                     Object selectedValueUser = tablePending.getModel().getValueAt(selectedRow, 1);
@@ -125,7 +115,7 @@ public class Request {
                                     Object selectedValueServiceTag = tablePending.getModel().getValueAt(selectedRow, 4);
                                     StringSelection selectionPath = new StringSelection(selectedValuePath.toString());  // selection = path of .exe
                                     clipboard.setContents(selectionPath, null);
-                                    //processAnswer(requestsPending, selectedValueUser.toString());
+                                    processAnswer(requestsPending, selectedValueUser.toString());
                                     startInstallationOnClient(selectedValueUser.toString(), selectedValueServiceTag.toString(), selectedValuePath.toString());
 
                                     tablePending.setValueAt(newStatus[0], selectedRow, 0);
@@ -135,19 +125,12 @@ public class Request {
                         reject.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                if (e.getSource()==approve) {
-                                    setRequest = "reject";
-
-                                    int selectedRow = tablePending.getSelectedRow();
-                                    Object selectedValueUser = tablePending.getModel().getValueAt(selectedRow, 1);
-                                    Object selectedValuePath = tablePending.getModel().getValueAt(selectedRow, 3);
-                                    Object selectedValueServiceTag = tablePending.getModel().getValueAt(selectedRow, 4);
-                                    StringSelection selectionPath = new StringSelection(selectedValuePath.toString());  // selection = path of .exe
-                                    clipboard.setContents(selectionPath, null);
-                                    //processAnswer(requestsPending, selectedValueUser.toString());
-                                    //startInstallationOnClient(selectedValueUser.toString(), selectedValueServiceTag.toString(), selectedValuePath.toString());
-                                    tablePending.setValueAt(newStatus[1], selectedRow, 0);
-                                }
+                                answer = "reject";
+                                System.out.println("reject");
+                                // rücksignal/ rückmeldung -> bot, startet methode deny request -> client erhält Nachicht "abgelehnt weil, ....."
+                                int selectedRow = tablePending.getSelectedRow();
+                                tablePending.setValueAt(newStatus[1], selectedRow, 0);
+                                // send dialog to checkUser...
                             }
                         });
                         copyPathItem.addActionListener(new ActionListener() {
@@ -166,17 +149,19 @@ public class Request {
                     selectedValue = null;
                 }
             });
-            frame.add(tabbedPane);
-            frame.pack();
-            frame.setSize(600, 800);
-            frame.setVisible(true);
+            requestFrame = new JFrame("[Admin]Requests:  [Pending " + requestsPending.size() + "]");
+            requestFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            tabbedPane = new JTabbedPane();
+            tabbedPane.addTab("Pending", new JScrollPane(tablePending));
+            requestFrame.add(tabbedPane);
+            requestFrame.setSize(600, 800);
+            requestFrame.pack();
+            requestFrame.setVisible(true);
         } else {
             // updating the tables
             tablePending.setModel(new DefaultTableModel(dataPending, columnNamesPending));
-            tableApproved.setModel(new DefaultTableModel(dataApproved, columnNamesApproved));
-            tableRejected.setModel(new DefaultTableModel(dataRejected, columnNamesRejected));
             // updating the counter from the title bar
-            frame.setTitle("Requests:  [Pending " + requestsPending.size() + " / Approved " + requestsApproved.size() +" / Rejected " + requestsRejected.size() + "]");
+            requestFrame.setTitle("Requests:  [Pending " + requestsPending.size() + "]");
         }
     }
 }
