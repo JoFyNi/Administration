@@ -1,24 +1,30 @@
 package ressources;
 
-import com.jcraft.jsch.*;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import static ressources.Request.displayRequests;
 import static ressources.administrator.displayPending;
 import static ressources.connection.*;
 
 public class Bot {
-    private final String csvFile;
+    private String botName;
+    private int botId;
+    private String botType;
+    private String csvFile;
     //List to hold "Request" objects
+
+
     public Bot(String botName, int botId, String botType, String csvFile) {
+        this.botName = botName;
+        this.botId = botId;
+        this.botType = botType;
         this.csvFile = csvFile;
-        System.out.println("Bot: [" + botName + ":" + botId+ "  " + botType + " permission" + "] starting");
     }
+
+
     public void startBot() {
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
@@ -30,6 +36,7 @@ public class Bot {
         };
         timer.schedule(task, 0, 10000);     // run all 10 seconds
     }
+
     private void checkRequests() {
         String line = "";
         String cvsSplitBy = ",";
@@ -51,12 +58,11 @@ public class Bot {
                     requestsApproved.add(request);
                 } else if(request.status == 'f' || request.status == 'F'){      // rejected Request
                     requestsRejected.add(request);
-                } else {
-                    //System.out.println("no more request");
-                }
+                } else {System.out.println("no more request");}
             }
             System.out.println("pending: " + requestsPending.size() +"  approve: " + requestsApproved.size() + "  rejected: " + requestsRejected.size());
         } catch (Exception e) {
+            e.printStackTrace();
             System.exit(1);
         }
         getRequests(requestsPending, requestsApproved, requestsRejected);
@@ -71,79 +77,39 @@ public class Bot {
     public void getRequests(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
         displayRequests(requestsPending, requestsApproved, requestsRejected);
     }
+
+
     private void sendRequests(List<Request> requestsPending, String user) {
-        boolean userExists = false;
-        for (Request request : requestsPending) {
-            if (request.user.equals(user)) {
-                userExists = true;
-                break;
-            }
-        }
-        if (userExists) {
-            //System.out.println("No new request for user: " + user);
-        } else {
-            //.out.println("Sending requests from >>>" + user + "<<< to Administrator");
-            administrator.getRequests(requestsPending, user);
-        }
+        System.out.println("sending requests to Administrator");
+        administrator.getRequests(requestsPending, user);
     }
+
     public static void startInstallationOnClient(String user, String serviceTag, String path) {
         System.out.println("Installation: " + path + "  >>>  " + user + ":" + serviceTag);
-        String Administrator = " "; // add Administrator (local admin)
-        try {
-            JSch jsch = new JSch();
-            Session session = jsch.getSession(user, serviceTag);    // serviceTag zu ip abändern?
-            session.setPassword("admin password");
-            session.setConfig("StrictHostKeyChecking", "no");
-            session.connect();
-
-            Channel channel = session.openChannel("exec");
-            ((ChannelExec)channel).setCommand("cmd.exe /c start /wait runas /user:" + Administrator + " " + path);
-            channel.setInputStream(null);
-            ((ChannelExec)channel).setErrStream(System.err);
-
-            System.out.println(session + " -> " + path + "  from " + serviceTag + " " + user );
-
-            InputStream in=channel.getInputStream();
-            channel.connect();
-
-            byte[] tmp=new byte[messageValue];
-            while(true){
-                while(in.available()>0){
-                    int i=in.read(tmp, 0, messageValue);
-                    if(i<0)break;
-                    System.out.print(new String(tmp, 0, i));
-                }
-                if(channel.isClosed()){
-                    System.out.println("exit-status: "+channel.getExitStatus());
-                    break;
-                }
-                try{Thread.sleep(1000);}catch(Exception ee){}
-            }
-            channel.disconnect();
-            session.disconnect();
-        } catch (JSchException e) {
-            System.out.println("JSchException (startInstallationOnClient)");
-        } catch (IOException e) {
-            System.out.println("IOException (startInstallationOnClient)");
-        }
-
-        // String connectToClient = System.getProperty(serviceTag);
-        //String command = "cmd.exe /c start /wait runas /user:Administrator " + path;
+        // remote verbindung herstellen/
+        // start Runtime on user pc
+        //String command = "cmd.exe /c start /wait runas /user:Administrator myprogram.exe";
         //Runtime.getRuntime().exec(command);
-        //try {
-        //    Runtime.getRuntime().exec("C:\\Windows\\System32\\cmd.exe /c start " + path);
-        //} catch (IOException e) {
-        //    throw new RuntimeException(e);
-        //}
+
+        try {
+            Runtime.getRuntime().exec("C:\\Windows\\System32\\cmd.exe /c start " + path);
+            System.out.println(Runtime.getRuntime().exec("C:\\Windows\\System32\\cmd.exe /c start " + path));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+
+
     public static void getInformation(String clientInfo, int processor, long freeMemory, long totalMemory) throws IOException {
-        System.out.println(clientInfo + "\n" + "processor: " + processor + "  freeMemory: " + freeMemory + "  totalMemory: " + totalMemory);
+        System.out.println(clientInfo + "\n" + "processor: " + processor + " " + "freeMemory: " + freeMemory + " " + "totalMemory: " + totalMemory);
         File clientInfoFile = new File("src/main/java/Clients/clientInfos.txt");
         FileWriter fileWriter = new FileWriter(clientInfoFile, true);
         fileWriter.append(clientInfo);
         fileWriter.append("\n");
         fileWriter.close();
     }
+
     public static InetAddress getByAddress(String host, byte[] addr) throws UnknownHostException {
         System.out.println("Host Name: "+ host);
         System.out.println("IP Address: "+ addr);
