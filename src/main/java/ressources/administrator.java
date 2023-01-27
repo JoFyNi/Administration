@@ -23,7 +23,6 @@ public class administrator {
     private String csvFile;
     static Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     static char[] newStatus = {'t','f','n'};
-
     public void startAdmin() {
         java.util.Timer timer = new Timer();
         TimerTask task = new TimerTask() {
@@ -34,37 +33,28 @@ public class administrator {
         };
         timer.schedule(task, 0, 10000);     // run all 10 seconds
     }
-
     public static String answer = "pending";
-
     public administrator(String admin, int adminID, String adminPassword, String csvFile) {
         this.admin = admin;
         this.adminID = adminID;
         this.adminPassword = adminPassword;
         this.csvFile = csvFile;
-
         System.out.println("admin " + admin + "  adminID " + adminID + "  adminPassword " + adminPassword);
     }
-
-
     public static void getRequests(List<Request> requestsPending, String user){
         System.out.println("Request applied to administrator");
         displayPending(requestsPending);
         // verarbeiten -> auswahl Append or deny
         // rücksignal/ rückmeldung -> bot, startet methode startInstallationOnClient(...request...beschreibung(programm)) -> client erhält signal -> installation -> anfrage wird gelöscht da, fertig
-        //
     }
-
     public static void processAnswer(List<Request> requestsPending, String user){
         System.out.println(user);
         //Bot.startInstallationOnClient(requestsPending, checkUser);
         // rücksignal/ rückmeldung -> bot, startet methode startInstallationOnClient(...request...beschreibung(programm)) -> client erhält signal -> installation -> anfrage wird gelöscht da, fertig
     }
-
     public static JFrame requestFrame;
     public static JTable tablePending;
     public static JTabbedPane tabbedPane;
-
     public static void displayPending(List<Request> requestsPending) {
         // Create column names
         String[] columnNamesPending = {"status", "user", "email", "path", "host", "date"};
@@ -78,12 +68,9 @@ public class administrator {
             dataPending[i][4] = requestsPending.get(i).host;
             dataPending[i][5] = requestsPending.get(i).currentDate;
         }
-
-
         if (requestFrame == null) {
             // Create a new table instance
             tablePending = new JTable(dataPending, columnNamesPending);
-
             tablePending.addMouseListener(new MouseAdapter() {
                 JPopupMenu popupMenu = new JPopupMenu();
                 JMenuItem approve = new JMenuItem("approve");
@@ -108,7 +95,6 @@ public class administrator {
                             public void actionPerformed(ActionEvent e) {
                                 if (e.getSource()==approve) {
                                     answer = "approve";
-
                                     int selectedRow = tablePending.getSelectedRow();
                                     Object selectedValueUser = tablePending.getModel().getValueAt(selectedRow, 1);
                                     Object selectedValuePath = tablePending.getModel().getValueAt(selectedRow, 3);
@@ -117,7 +103,6 @@ public class administrator {
                                     clipboard.setContents(selectionPath, null);
                                     processAnswer(requestsPending, selectedValueUser.toString());
                                     startInstallationOnClient(selectedValueUser.toString(), selectedValueServiceTag.toString(), selectedValuePath.toString());
-
                                     tablePending.setValueAt(newStatus[0], selectedRow, 0);
                                 }
                             }
@@ -137,10 +122,8 @@ public class administrator {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 int selectedRow = tablePending.getSelectedRow();
-
                                 Object selectedValue = tablePending.getModel().getValueAt(selectedRow, 3);
                                 StringSelection selection = new StringSelection(selectedValue.toString());
-
                                 clipboard.setContents(selection, null);
                                 System.out.println(clipboard);
                             }

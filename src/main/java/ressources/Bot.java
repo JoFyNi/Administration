@@ -15,16 +15,12 @@ public class Bot {
     private String botType;
     private String csvFile;
     //List to hold "Request" objects
-
-
     public Bot(String botName, int botId, String botType, String csvFile) {
         this.botName = botName;
         this.botId = botId;
         this.botType = botType;
         this.csvFile = csvFile;
     }
-
-
     public void startBot() {
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
@@ -36,7 +32,6 @@ public class Bot {
         };
         timer.schedule(task, 0, 10000);     // run all 10 seconds
     }
-
     private void checkRequests() {
         String line = "";
         String cvsSplitBy = ",";
@@ -77,30 +72,24 @@ public class Bot {
     public void getRequests(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
         displayRequests(requestsPending, requestsApproved, requestsRejected);
     }
-
-
     private void sendRequests(List<Request> requestsPending, String user) {
         System.out.println("sending requests to Administrator");
         administrator.getRequests(requestsPending, user);
     }
-
     public static void startInstallationOnClient(String user, String serviceTag, String path) {
         System.out.println("Installation: " + path + "  >>>  " + user + ":" + serviceTag);
-        // remote verbindung herstellen/
-        // start Runtime on user pc
-        //String command = "cmd.exe /c start /wait runas /user:Administrator myprogram.exe";
+        /**
+         * powerShell script auf client pc ausführen -> anmeldung serviceTag:admin -> runTime(path)...
+         */
+        // String connectToClient = System.getProperty(serviceTag);
+        //String command = "cmd.exe /c start /wait runas /user:Administrator " + path;
         //Runtime.getRuntime().exec(command);
-
-        try {
-            Runtime.getRuntime().exec("C:\\Windows\\System32\\cmd.exe /c start " + path);
-            System.out.println(Runtime.getRuntime().exec("C:\\Windows\\System32\\cmd.exe /c start " + path));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        //try {
+        //    Runtime.getRuntime().exec("C:\\Windows\\System32\\cmd.exe /c start " + path);
+        //} catch (IOException e) {
+        //    throw new RuntimeException(e);
+        //}
     }
-
-
-
     public static void getInformation(String clientInfo, int processor, long freeMemory, long totalMemory) throws IOException {
         System.out.println(clientInfo + "\n" + "processor: " + processor + " " + "freeMemory: " + freeMemory + " " + "totalMemory: " + totalMemory);
         File clientInfoFile = new File("src/main/java/Clients/clientInfos.txt");
@@ -109,7 +98,6 @@ public class Bot {
         fileWriter.append("\n");
         fileWriter.close();
     }
-
     public static InetAddress getByAddress(String host, byte[] addr) throws UnknownHostException {
         System.out.println("Host Name: "+ host);
         System.out.println("IP Address: "+ addr);

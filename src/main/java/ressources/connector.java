@@ -34,7 +34,6 @@ public class connector {
             throw new RuntimeException(e);
         }
     }
-
     public static void run() {
         while (true) {
             try {
