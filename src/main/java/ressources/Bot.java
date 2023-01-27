@@ -1,25 +1,23 @@
 package ressources;
 
+import com.jcraft.jsch.*;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static ressources.Request.displayRequests;
 import static ressources.administrator.displayPending;
 import static ressources.connection.*;
 
 public class Bot {
-    private String botName;
-    private int botId;
-    private String botType;
-    private String csvFile;
+    private final String csvFile;
     //List to hold "Request" objects
     public Bot(String botName, int botId, String botType, String csvFile) {
-        this.botName = botName;
-        this.botId = botId;
-        this.botType = botType;
         this.csvFile = csvFile;
+        System.out.println("Bot: [" + botName + ":" + botId + " permission" + botType + "] starting");
     }
     public void startBot() {
         Timer timer = new Timer();
@@ -78,9 +76,42 @@ public class Bot {
     }
     public static void startInstallationOnClient(String user, String serviceTag, String path) {
         System.out.println("Installation: " + path + "  >>>  " + user + ":" + serviceTag);
-        /**
-         * powerShell script auf client pc ausführen -> anmeldung serviceTag:admin -> runTime(path)...
-         */
+        try {
+            JSch jsch = new JSch();
+            Session session = jsch.getSession(user, serviceTag);    // serviceTag zu ip abändern?
+            session.setPassword("admin");
+            session.setConfig("StrictHostKeyChecking", "no");
+            session.connect();
+
+            Channel channel = session.openChannel("exec");
+            ((ChannelExec)channel).setCommand("cmd.exe /c start /wait runas /user:Administrator " + path);
+            channel.setInputStream(null);
+            ((ChannelExec)channel).setErrStream(System.err);
+
+            InputStream in=channel.getInputStream();
+            channel.connect();
+
+            byte[] tmp=new byte[1024];
+            while(true){
+                while(in.available()>0){
+                    int i=in.read(tmp, 0, 1024);
+                    if(i<0)break;
+                    System.out.print(new String(tmp, 0, i));
+                }
+                if(channel.isClosed()){
+                    System.out.println("exit-status: "+channel.getExitStatus());
+                    break;
+                }
+                try{Thread.sleep(1000);}catch(Exception ee){}
+            }
+            channel.disconnect();
+            session.disconnect();
+        } catch (JSchException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         // String connectToClient = System.getProperty(serviceTag);
         //String command = "cmd.exe /c start /wait runas /user:Administrator " + path;
         //Runtime.getRuntime().exec(command);
