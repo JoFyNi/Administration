@@ -1,29 +1,43 @@
 package ressources;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Date;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
+import static ressources.Bot.startInstallationOnClient;
 
 public class Request {
     char status;
     String user;
     String email;
-    String requestTag;
+    String path;
+    String host;
+    String ip;
+    String currentDate;
+    static Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+    static char[] newStatus = {'t','f','n'};
+
 
     public Request(String test) {
     }
     public Request() {
     }
 
-    public Request(char status, String user, String email, String requestTag) {
+    public Request(char status, String user, String email, String path, String host, String currentDate) {
         this.status = status;
         this.user = user;
         this.email = email;
-        this.requestTag = requestTag;
+        this.path = path;
+        this.host = host;
+        this.currentDate = currentDate;
     }
 
     public static JFrame frame;
@@ -35,31 +49,37 @@ public class Request {
 
     public static void displayRequests(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
         // Create column names
-        String[] columnNamesPending = {"status", "user", "email", "request"};
-        String[] columnNamesApproved = {"status", "user", "email", "request"};
-        String[] columnNamesRejected = {"status", "user", "email", "request"};
+        String[] columnNamesPending = {"status", "user", "email", "path", "host", "date"};
+        String[] columnNamesApproved = {"status", "user", "email", "path", "host", "date"};
+        String[] columnNamesRejected = {"status", "user", "email", "path", "host", "date"};
 
         // Create data for each dataColumns in the table
-        Object[][] dataPending = new Object[requestsPending.size()][4];
+        Object[][] dataPending = new Object[requestsPending.size()][6];
         for (int i = 0; i < requestsPending.size(); i++) {
             dataPending[i][0] = requestsPending.get(i).status;
             dataPending[i][1] = requestsPending.get(i).user;
             dataPending[i][2] = requestsPending.get(i).email;
-            dataPending[i][3] = requestsPending.get(i).requestTag;
+            dataPending[i][3] = requestsPending.get(i).path;
+            dataPending[i][4] = requestsPending.get(i).host;
+            dataPending[i][5] = requestsPending.get(i).currentDate;
         }
-        Object[][] dataApproved = new Object[requestsApproved.size()][4];
+        Object[][] dataApproved = new Object[requestsApproved.size()][6];
         for (int i = 0; i < requestsApproved.size(); i++) {
             dataApproved[i][0] = requestsApproved.get(i).status;
             dataApproved[i][1] = requestsApproved.get(i).user;
             dataApproved[i][2] = requestsApproved.get(i).email;
-            dataApproved[i][3] = requestsApproved.get(i).requestTag;
+            dataApproved[i][3] = requestsApproved.get(i).path;
+            dataPending[i][4] = requestsPending.get(i).host;
+            dataPending[i][5] = requestsPending.get(i).currentDate;
         }
-        Object[][] dataRejected = new Object[requestsRejected.size()][4];
+        Object[][] dataRejected = new Object[requestsRejected.size()][6];
         for (int i = 0; i < requestsRejected.size(); i++) {
             dataRejected[i][0] = requestsRejected.get(i).status;
             dataRejected[i][1] = requestsRejected.get(i).user;
             dataRejected[i][2] = requestsRejected.get(i).email;
-            dataRejected[i][3] = requestsRejected.get(i).requestTag;
+            dataRejected[i][3] = requestsRejected.get(i).path;
+            dataPending[i][4] = requestsPending.get(i).host;
+            dataPending[i][5] = requestsPending.get(i).currentDate;
         }
 
         if (frame == null) {
@@ -79,7 +99,7 @@ public class Request {
                 JMenuItem approve = new JMenuItem("approve");
                 JMenuItem reject = new JMenuItem("reject");
                 JMenuItem copyPathItem = new JMenuItem("copy path");
-                JLabel label = new JLabel();
+
                 String selectedValue = null;;
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -98,25 +118,48 @@ public class Request {
                             public void actionPerformed(ActionEvent e) {
                                 if (e.getSource()==approve) {
                                     setRequest = "approve";
-                                    System.out.println(setRequest);
+
+                                    int selectedRow = tablePending.getSelectedRow();
+                                    Object selectedValueUser = tablePending.getModel().getValueAt(selectedRow, 1);
+                                    Object selectedValuePath = tablePending.getModel().getValueAt(selectedRow, 3);
+                                    Object selectedValueServiceTag = tablePending.getModel().getValueAt(selectedRow, 4);
+                                    StringSelection selectionPath = new StringSelection(selectedValuePath.toString());  // selection = path of .exe
+                                    clipboard.setContents(selectionPath, null);
+                                    //processAnswer(requestsPending, selectedValueUser.toString());
+                                    startInstallationOnClient(selectedValueUser.toString(), selectedValueServiceTag.toString(), selectedValuePath.toString());
+
+                                    tablePending.setValueAt(newStatus[0], selectedRow, 0);
                                 }
                             }
                         });
                         reject.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                setRequest = "reject";
-                                System.out.println(setRequest);
-                                label.setText("Request Rejected");
+                                if (e.getSource()==approve) {
+                                    setRequest = "reject";
+
+                                    int selectedRow = tablePending.getSelectedRow();
+                                    Object selectedValueUser = tablePending.getModel().getValueAt(selectedRow, 1);
+                                    Object selectedValuePath = tablePending.getModel().getValueAt(selectedRow, 3);
+                                    Object selectedValueServiceTag = tablePending.getModel().getValueAt(selectedRow, 4);
+                                    StringSelection selectionPath = new StringSelection(selectedValuePath.toString());  // selection = path of .exe
+                                    clipboard.setContents(selectionPath, null);
+                                    //processAnswer(requestsPending, selectedValueUser.toString());
+                                    //startInstallationOnClient(selectedValueUser.toString(), selectedValueServiceTag.toString(), selectedValuePath.toString());
+                                    tablePending.setValueAt(newStatus[1], selectedRow, 0);
+                                }
                             }
                         });
                         copyPathItem.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                int selectedColumn = 0;
                                 int selectedRow = tablePending.getSelectedRow();
-                                selectedValue = tablePending.getModel().getValueAt(selectedRow, selectedColumn).toString();
-                                label.setText(selectedValue);
+
+                                Object selectedValue = tablePending.getModel().getValueAt(selectedRow, 3);
+                                StringSelection selection = new StringSelection(selectedValue.toString());
+
+                                clipboard.setContents(selection, null);
+                                System.out.println(clipboard);
                             }
                         });
                     }
