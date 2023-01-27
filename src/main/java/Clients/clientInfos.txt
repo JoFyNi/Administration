@@ -4,3 +4,5 @@ Eric Mesfun , Zuba@ferix.io , C:\Program Files (x86)\Kofax\Power PDF 31\IsisClie
 
 Alena Mesfun , Ubunto@xerc.ai , C:\Program Files (x86)\Frilo\Frilo.Software\FriloFSNCheckAdmin.exe , 63CGGM2/192.168.172.135 , Fri Jan 27 12:02:19 CET 2023
 
+Elisabth Nickelburf , SoundMix@beat.hit , C:\Program Files (x86)\CodeMeter\Runtime\bin\cmu32.exe , 63CGGM2/192.168.172.135 , Fri Jan 27 14:21:15 CET 2023
+
