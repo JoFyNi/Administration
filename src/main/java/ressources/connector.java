@@ -15,9 +15,7 @@ public class connector {
     private static MulticastSocket mySocket;
     private Main main;
     private Vector<user>userList;
-
     public connector(Main main) {
-
         try {
             String msg = "check";
             InetAddress mcastaddr = InetAddress.getByName(multicastIP);
@@ -36,34 +34,28 @@ public class connector {
             throw new RuntimeException(e);
         }
     }
-
     public static void run() {
         while (true) {
             try {
                 byte[] buffer = packageReceive();
                 process(buffer);
-
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
-
     public static byte [] packageReceive() throws IOException {
         byte[] buffer = new byte[messageValue];
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
         mySocket.receive(packet);
         return buffer;
     }
-
     public static void process(byte[] buffer) throws InterruptedException {
         String message = new String(buffer);
         message = message.trim();
-
         StringTokenizer token = new StringTokenizer(message, separator);
         String t1 = token.nextToken();
         String t2 = token.nextToken();
-
         if (t1.equals(connectionOnline)) {
             // get connection to clients
         } else if (t1.equals(connectionBreak)) {
@@ -73,7 +65,6 @@ public class connector {
         } else if (t1.equals(privat)) {
             String t3 = token.nextToken();
             String t4 = token.nextToken();
-
         } else {
             System.out.println("Error");
         }

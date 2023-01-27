@@ -24,13 +24,10 @@ public class Request {
     String currentDate;
     static Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     static char[] newStatus = {'t','f','n'};
-
-
     public Request(String test) {
     }
     public Request() {
     }
-
     public Request(char status, String user, String email, String path, String host, String currentDate) {
         this.status = status;
         this.user = user;
@@ -39,20 +36,17 @@ public class Request {
         this.host = host;
         this.currentDate = currentDate;
     }
-
     public static JFrame frame;
     public static JTable tablePending;
     public static JTable tableApproved;
     public static JTable tableRejected;
     public static JTabbedPane tabbedPane;
     public static String setRequest;
-
     public static void displayRequests(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
         // Create column names
         String[] columnNamesPending = {"status", "user", "email", "path", "host", "date"};
         String[] columnNamesApproved = {"status", "user", "email", "path", "host", "date"};
         String[] columnNamesRejected = {"status", "user", "email", "path", "host", "date"};
-
         // Create data for each dataColumns in the table
         Object[][] dataPending = new Object[requestsPending.size()][6];
         for (int i = 0; i < requestsPending.size(); i++) {
@@ -81,13 +75,11 @@ public class Request {
             dataPending[i][4] = requestsPending.get(i).host;
             dataPending[i][5] = requestsPending.get(i).currentDate;
         }
-
         if (frame == null) {
             // Create a new table instance
             tablePending = new JTable(dataPending, columnNamesPending);
             tableApproved = new JTable(dataRejected, columnNamesApproved);
             tableRejected = new JTable(dataRejected, columnNamesRejected);
-
             frame = new JFrame("Requests:  [Pending " + requestsPending.size() + " / Approved " + requestsApproved.size() + " / Rejected " + requestsRejected.size() + "]");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             tabbedPane = new JTabbedPane();
@@ -99,7 +91,6 @@ public class Request {
                 JMenuItem approve = new JMenuItem("approve");
                 JMenuItem reject = new JMenuItem("reject");
                 JMenuItem copyPathItem = new JMenuItem("copy path");
-
                 String selectedValue = null;;
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -118,7 +109,6 @@ public class Request {
                             public void actionPerformed(ActionEvent e) {
                                 if (e.getSource()==approve) {
                                     setRequest = "approve";
-
                                     int selectedRow = tablePending.getSelectedRow();
                                     Object selectedValueUser = tablePending.getModel().getValueAt(selectedRow, 1);
                                     Object selectedValuePath = tablePending.getModel().getValueAt(selectedRow, 3);
@@ -127,7 +117,6 @@ public class Request {
                                     clipboard.setContents(selectionPath, null);
                                     //processAnswer(requestsPending, selectedValueUser.toString());
                                     startInstallationOnClient(selectedValueUser.toString(), selectedValueServiceTag.toString(), selectedValuePath.toString());
-
                                     tablePending.setValueAt(newStatus[0], selectedRow, 0);
                                 }
                             }
@@ -137,7 +126,6 @@ public class Request {
                             public void actionPerformed(ActionEvent e) {
                                 if (e.getSource()==approve) {
                                     setRequest = "reject";
-
                                     int selectedRow = tablePending.getSelectedRow();
                                     Object selectedValueUser = tablePending.getModel().getValueAt(selectedRow, 1);
                                     Object selectedValuePath = tablePending.getModel().getValueAt(selectedRow, 3);
@@ -154,10 +142,8 @@ public class Request {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 int selectedRow = tablePending.getSelectedRow();
-
                                 Object selectedValue = tablePending.getModel().getValueAt(selectedRow, 3);
                                 StringSelection selection = new StringSelection(selectedValue.toString());
-
                                 clipboard.setContents(selection, null);
                                 System.out.println(clipboard);
                             }
