@@ -17,7 +17,7 @@ public class Bot {
     //List to hold "Request" objects
     public Bot(String botName, int botId, String botType, String csvFile) {
         this.csvFile = csvFile;
-        System.out.println("Bot: [" + botName + ":" + botId + " permission" + botType + "] starting");
+        System.out.println("Bot: [" + botName + ":" + botId+ "  " + botType + " permission" + "] starting");
     }
     public void startBot() {
         Timer timer = new Timer();
@@ -51,11 +51,12 @@ public class Bot {
                     requestsApproved.add(request);
                 } else if(request.status == 'f' || request.status == 'F'){      // rejected Request
                     requestsRejected.add(request);
-                } else {System.out.println("no more request");}
+                } else {
+                    //System.out.println("no more request");
+                }
             }
             System.out.println("pending: " + requestsPending.size() +"  approve: " + requestsApproved.size() + "  rejected: " + requestsRejected.size());
         } catch (Exception e) {
-            e.printStackTrace();
             System.exit(1);
         }
         getRequests(requestsPending, requestsApproved, requestsRejected);
@@ -71,8 +72,19 @@ public class Bot {
         displayRequests(requestsPending, requestsApproved, requestsRejected);
     }
     private void sendRequests(List<Request> requestsPending, String user) {
-        System.out.println("sending requests to Administrator");
-        administrator.getRequests(requestsPending, user);
+        boolean userExists = false;
+        for (Request request : requestsPending) {
+            if (request.user.equals(user)) {
+                userExists = true;
+                break;
+            }
+        }
+        if (userExists) {
+            System.out.println("No new request for user: " + user);
+        } else {
+            System.out.println("Sending requests from >>>" + user + "<<< to Administrator");
+            administrator.getRequests(requestsPending, user);
+        }
     }
     public static void startInstallationOnClient(String user, String serviceTag, String path) {
         System.out.println("Installation: " + path + "  >>>  " + user + ":" + serviceTag);
@@ -87,6 +99,8 @@ public class Bot {
             ((ChannelExec)channel).setCommand("cmd.exe /c start /wait runas /user:Administrator " + path);
             channel.setInputStream(null);
             ((ChannelExec)channel).setErrStream(System.err);
+
+            System.out.println(session + " -> " + path + "  from " + serviceTag + " " + user );
 
             InputStream in=channel.getInputStream();
             channel.connect();
@@ -107,9 +121,9 @@ public class Bot {
             channel.disconnect();
             session.disconnect();
         } catch (JSchException e) {
-            e.printStackTrace();
+            System.out.println("JSchException (startInstallationOnClient)");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("IOException (startInstallationOnClient)");
         }
 
         // String connectToClient = System.getProperty(serviceTag);
