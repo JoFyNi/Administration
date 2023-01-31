@@ -152,6 +152,138 @@ public class Request {
                     selectedValue = null;
                 }
             });
+            tableApproved.addMouseListener(new MouseAdapter() {
+                JPopupMenu popupMenu = new JPopupMenu();
+                JMenuItem pending = new JMenuItem("pending");
+                JMenuItem reject = new JMenuItem("reject");
+                JMenuItem copyPathItem = new JMenuItem("copy path");
+                String selectedValue = null;;
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (SwingUtilities.isLeftMouseButton(e)){
+                        if (e.getSource()==pending) {
+                            System.out.println(e.getSource()==pending);
+                        }
+                    }
+                    if (SwingUtilities.isRightMouseButton(e)){
+                        popupMenu.add(pending);
+                        popupMenu.add(reject);
+                        popupMenu.add(copyPathItem);
+                        popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                        pending.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                if (e.getSource()==pending) {
+                                    setRequest = "pending";
+                                    int selectedRow = tablePending.getSelectedRow();
+                                    Object selectedValueUser = tablePending.getModel().getValueAt(selectedRow, 1);
+                                    Object selectedValuePath = tablePending.getModel().getValueAt(selectedRow, 3);
+                                    Object selectedValueServiceTag = tablePending.getModel().getValueAt(selectedRow, 4);
+                                    StringSelection selectionPath = new StringSelection(selectedValuePath.toString());  // selection = path of .exe
+                                    clipboard.setContents(selectionPath, null);
+                                    //processAnswer(requestsPending, selectedValueUser.toString());
+                                    startInstallationOnClient(selectedValueUser.toString(), selectedValueServiceTag.toString(), selectedValuePath.toString());
+                                    tablePending.setValueAt(newStatus[0], selectedRow, 0);
+                                }
+                            }
+                        });
+                        reject.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                if (e.getSource()==pending) {
+                                    setRequest = "reject";
+                                    int selectedRow = tablePending.getSelectedRow();
+                                    Object selectedValueUser = tablePending.getModel().getValueAt(selectedRow, 1);
+                                    Object selectedValuePath = tablePending.getModel().getValueAt(selectedRow, 3);
+                                    Object selectedValueServiceTag = tablePending.getModel().getValueAt(selectedRow, 4);
+                                    StringSelection selectionPath = new StringSelection(selectedValuePath.toString());  // selection = path of .exe
+                                    clipboard.setContents(selectionPath, null);
+                                    //processAnswer(requestsPending, selectedValueUser.toString());
+                                    //startInstallationOnClient(selectedValueUser.toString(), selectedValueServiceTag.toString(), selectedValuePath.toString());
+                                    tablePending.setValueAt(newStatus[1], selectedRow, 0);
+                                }
+                            }
+                        });
+                        copyPathItem.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                int selectedRow = tablePending.getSelectedRow();
+                                Object selectedValue = tablePending.getModel().getValueAt(selectedRow, 3);
+                                StringSelection selection = new StringSelection(selectedValue.toString());
+                                clipboard.setContents(selection, null);
+                                System.out.println(clipboard);
+                            }
+                        });
+                    }
+                    selectedValue = null;
+                }
+            });
+            tableRejected.addMouseListener(new MouseAdapter() {
+                JPopupMenu popupMenu = new JPopupMenu();
+                JMenuItem approve = new JMenuItem("approve");
+                JMenuItem pending = new JMenuItem("pending");
+                JMenuItem copyPathItem = new JMenuItem("copy path");
+                String selectedValue = null;;
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (SwingUtilities.isLeftMouseButton(e)){
+                        if (e.getSource()==pending) {
+                            System.out.println(e.getSource()==pending);
+                        }
+                    }
+                    if (SwingUtilities.isRightMouseButton(e)){
+                        popupMenu.add(approve);
+                        popupMenu.add(pending);
+                        popupMenu.add(copyPathItem);
+                        popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                        approve.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                if (e.getSource()==pending) {
+                                    setRequest = "approve";
+                                    int selectedRow = tablePending.getSelectedRow();
+                                    Object selectedValueUser = tablePending.getModel().getValueAt(selectedRow, 1);
+                                    Object selectedValuePath = tablePending.getModel().getValueAt(selectedRow, 3);
+                                    Object selectedValueServiceTag = tablePending.getModel().getValueAt(selectedRow, 4);
+                                    StringSelection selectionPath = new StringSelection(selectedValuePath.toString());  // selection = path of .exe
+                                    clipboard.setContents(selectionPath, null);
+                                    //processAnswer(requestsPending, selectedValueUser.toString());
+                                    startInstallationOnClient(selectedValueUser.toString(), selectedValueServiceTag.toString(), selectedValuePath.toString());
+                                    tablePending.setValueAt(newStatus[0], selectedRow, 0);
+                                }
+                            }
+                        });
+                        pending.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                if (e.getSource()==pending) {
+                                    setRequest = "pending";
+                                    int selectedRow = tablePending.getSelectedRow();
+                                    Object selectedValueUser = tablePending.getModel().getValueAt(selectedRow, 1);
+                                    Object selectedValuePath = tablePending.getModel().getValueAt(selectedRow, 3);
+                                    Object selectedValueServiceTag = tablePending.getModel().getValueAt(selectedRow, 4);
+                                    StringSelection selectionPath = new StringSelection(selectedValuePath.toString());  // selection = path of .exe
+                                    clipboard.setContents(selectionPath, null);
+                                    //processAnswer(requestsPending, selectedValueUser.toString());
+                                    //startInstallationOnClient(selectedValueUser.toString(), selectedValueServiceTag.toString(), selectedValuePath.toString());
+                                    tablePending.setValueAt(newStatus[1], selectedRow, 0);
+                                }
+                            }
+                        });
+                        copyPathItem.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                int selectedRow = tablePending.getSelectedRow();
+                                Object selectedValue = tablePending.getModel().getValueAt(selectedRow, 3);
+                                StringSelection selection = new StringSelection(selectedValue.toString());
+                                clipboard.setContents(selection, null);
+                                System.out.println(clipboard);
+                            }
+                        });
+                    }
+                    selectedValue = null;
+                }
+            });
             frame.add(tabbedPane);
             frame.pack();
             frame.setSize(600, 800);
