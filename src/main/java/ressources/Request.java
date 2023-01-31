@@ -63,8 +63,8 @@ public class Request {
             dataApproved[i][1] = requestsApproved.get(i).user;
             dataApproved[i][2] = requestsApproved.get(i).email;
             dataApproved[i][3] = requestsApproved.get(i).path;
-            dataPending[i][4] = requestsPending.get(i).host;
-            dataPending[i][5] = requestsPending.get(i).currentDate;
+            dataApproved[i][4] = requestsPending.get(i).host;
+            dataApproved[i][5] = requestsPending.get(i).currentDate;
         }
         Object[][] dataRejected = new Object[requestsRejected.size()][6];
         for (int i = 0; i < requestsRejected.size(); i++) {
@@ -72,8 +72,8 @@ public class Request {
             dataRejected[i][1] = requestsRejected.get(i).user;
             dataRejected[i][2] = requestsRejected.get(i).email;
             dataRejected[i][3] = requestsRejected.get(i).path;
-            dataPending[i][4] = requestsPending.get(i).host;
-            dataPending[i][5] = requestsPending.get(i).currentDate;
+            dataRejected[i][4] = requestsPending.get(i).host;
+            dataRejected[i][5] = requestsPending.get(i).currentDate;
         }
         if (frame == null) {
             // Create a new table instance
