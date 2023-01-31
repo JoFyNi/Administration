@@ -15,6 +15,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static ressources.Bot.startInstallationOnClient;
+import static ressources.CheckList.compareSelection;
+import static ressources.CheckList.setModel;
 
 public class administrator {
     private String admin = "admin";
@@ -42,7 +44,7 @@ public class administrator {
         System.out.println("admin " + admin + "  adminID " + adminID + "  adminPassword " + adminPassword);
     }
     public static void getRequests(List<Request> requestsPending, String user){
-        System.out.println("Request applied to administrator");
+        System.out.println("Request from >>>" + user + "<<< to applied to administrator");
         displayPending(requestsPending);
         // verarbeiten -> auswahl Append or deny
         // rücksignal/ rückmeldung -> bot, startet methode startInstallationOnClient(...request...beschreibung(programm)) -> client erhält signal -> installation -> anfrage wird gelöscht da, fertig
@@ -76,6 +78,7 @@ public class administrator {
                 JMenuItem approve = new JMenuItem("approve");
                 JMenuItem reject = new JMenuItem("reject");
                 JMenuItem copyPathItem = new JMenuItem("copy path");
+                JMenuItem checkList = new JMenuItem("compare with checkList");
                 JLabel label = new JLabel();
                 String selectedValue = null;;
                 @Override
@@ -89,6 +92,7 @@ public class administrator {
                         popupMenu.add(approve);
                         popupMenu.add(reject);
                         popupMenu.add(copyPathItem);
+                        popupMenu.add(checkList);
                         popupMenu.show(e.getComponent(), e.getX(), e.getY());
                         approve.addActionListener(new ActionListener() {
                             @Override
@@ -128,10 +132,21 @@ public class administrator {
                                 System.out.println(clipboard);
                             }
                         });
+                        checkList.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                int selectedRow = tablePending.getSelectedRow();
+                                Object selectedValueUser = tablePending.getModel().getValueAt(selectedRow, 1);
+                                Object selectedValuePath = tablePending.getModel().getValueAt(selectedRow, 3);
+                                Object selectedValueServiceTag = tablePending.getModel().getValueAt(selectedRow, 4);
+                                setModel(selectedValueUser.toString(), selectedValueServiceTag.toString(), selectedValuePath.toString());
+                            }
+                        });
                     }
                     selectedValue = null;
                 }
             });
+
             requestFrame = new JFrame("[Admin]Requests:  [Pending " + requestsPending.size() + "]");
             requestFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             tabbedPane = new JTabbedPane();
