@@ -80,9 +80,9 @@ public class Bot {
             }
         }
         if (userExists) {
-            System.out.println("No new request for user: " + user);
+            //System.out.println("No new request for user: " + user);
         } else {
-            System.out.println("Sending requests from >>>" + user + "<<< to Administrator");
+            //.out.println("Sending requests from >>>" + user + "<<< to Administrator");
             administrator.getRequests(requestsPending, user);
         }
     }

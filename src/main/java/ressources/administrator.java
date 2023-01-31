@@ -15,7 +15,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static ressources.Bot.startInstallationOnClient;
-import static ressources.CheckList.compareSelection;
 import static ressources.CheckList.setModel;
 
 public class administrator {
@@ -44,7 +43,7 @@ public class administrator {
         System.out.println("admin " + admin + "  adminID " + adminID + "  adminPassword " + adminPassword);
     }
     public static void getRequests(List<Request> requestsPending, String user){
-        System.out.println("Request from >>>" + user + "<<< to applied to administrator");
+        //System.out.println("Request from >>>" + user + "<<< to applied to administrator");
         displayPending(requestsPending);
         // verarbeiten -> auswahl Append or deny
         // rücksignal/ rückmeldung -> bot, startet methode startInstallationOnClient(...request...beschreibung(programm)) -> client erhält signal -> installation -> anfrage wird gelöscht da, fertig
