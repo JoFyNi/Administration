@@ -1,5 +1,6 @@
 package ressources;
 
+import Admin.administrator;
 import com.jcraft.jsch.*;
 import java.io.*;
 import java.net.InetAddress;
@@ -9,7 +10,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static ressources.Request.displayRequests;
-import static ressources.administrator.displayPending;
+import static Admin.administrator.displayPending;
 import static ressources.connection.*;
 
 public class Bot {
