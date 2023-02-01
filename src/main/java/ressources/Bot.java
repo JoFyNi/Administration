@@ -51,8 +51,6 @@ public class Bot {
                     requestsApproved.add(request);
                 } else if(request.status == 'f' || request.status == 'F'){      // rejected Request
                     requestsRejected.add(request);
-                } else {
-                    //System.out.println("no more request");
                 }
             }
             System.out.println("pending: " + requestsPending.size() +"  approve: " + requestsApproved.size() + "  rejected: " + requestsRejected.size());
@@ -88,15 +86,16 @@ public class Bot {
     }
     public static void startInstallationOnClient(String user, String serviceTag, String path) {
         System.out.println("Installation: " + path + "  >>>  " + user + ":" + serviceTag);
+        String Administrator = ""; // add Administrator (local admin)
         try {
             JSch jsch = new JSch();
             Session session = jsch.getSession(user, serviceTag);    // serviceTag zu ip abändern?
-            session.setPassword("admin");
+            session.setPassword("admin password");
             session.setConfig("StrictHostKeyChecking", "no");
             session.connect();
 
             Channel channel = session.openChannel("exec");
-            ((ChannelExec)channel).setCommand("cmd.exe /c start /wait runas /user:Administrator " + path);
+            ((ChannelExec)channel).setCommand("cmd.exe /c start /wait runas /user:" + Administrator + " " + path);
             channel.setInputStream(null);
             ((ChannelExec)channel).setErrStream(System.err);
 
