@@ -2,6 +2,8 @@ package Admin;
 
 import javax.swing.*;
 import java.io.*;
+import java.net.Inet4Address;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Console {
@@ -51,7 +53,8 @@ public class Console {
     private void startUpdate() {
         consoleOutput.append(" Starting update...\n");
         try {
-            Runtime.getRuntime().exec("src/main/java/Admin/Commands/WindowsUpdate.ps1");
+            Runtime.getRuntime().exec("powershell.exe -NoProfile -ExecutionPolicy Bypass -File src/main/java/Admin/Commands/WindowsUpdate.ps1 " + Inet4Address.getLocalHost().getHostName());
+            System.out.println(Inet4Address.getLocalHost().getHostName());
         } catch (IOException e) {
             e.printStackTrace();
         }
