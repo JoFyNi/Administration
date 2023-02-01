@@ -88,16 +88,15 @@ public class Bot {
     }
     public static void startInstallationOnClient(String user, String serviceTag, String path) {
         System.out.println("Installation: " + path + "  >>>  " + user + ":" + serviceTag);
-        String Administrator = " "; // add Administrator (local admin)
         try {
             JSch jsch = new JSch();
             Session session = jsch.getSession(user, serviceTag);    // serviceTag zu ip abändern?
-            session.setPassword("admin password");
+            session.setPassword("admin");
             session.setConfig("StrictHostKeyChecking", "no");
             session.connect();
 
             Channel channel = session.openChannel("exec");
-            ((ChannelExec)channel).setCommand("cmd.exe /c start /wait runas /user:" + Administrator + " " + path);
+            ((ChannelExec)channel).setCommand("cmd.exe /c start /wait runas /user:Administrator " + path);
             channel.setInputStream(null);
             ((ChannelExec)channel).setErrStream(System.err);
 
@@ -106,7 +105,7 @@ public class Bot {
             InputStream in=channel.getInputStream();
             channel.connect();
 
-            byte[] tmp=new byte[messageValue];
+            byte[] tmp=new byte[1024];
             while(true){
                 while(in.available()>0){
                     int i=in.read(tmp, 0, messageValue);
