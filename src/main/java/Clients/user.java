@@ -18,14 +18,6 @@ public class user {
     private static String name;
     private static String email;
     private static String path;
-    private static final InetAddress ip;
-    static {
-        try {
-            ip = Inet4Address.getLocalHost();
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        }
-    }
     private static final Date currentDate = new Date();
     public static void createRequest() throws IOException  {
         JDialog dialog = new JDialog();
@@ -64,8 +56,8 @@ public class user {
                 JOptionPane.showMessageDialog(null, "Please fill all fields");
             } else {
                 try {
-                    addRequest("n," + name + ", " +  email + ", " + path + ", " + ip.getHostName() + ", " + currentDate +"\n");
-                    Bot.getByAddress(ip.getHostName(), ip.getAddress());
+                    addRequest("n," + name + ", " +  email + ", " + path + ", " + Inet4Address.getLocalHost() + ", " + currentDate +"\n");
+                    Bot.getByAddress(Inet4Address.getLocalHost().toString(), Inet4Address.getLocalHost().getAddress());
                     String clientInformation = name + " , " + email + " , " + path + " , " + Inet4Address.getLocalHost() + " , " + currentDate + "\n";
                     getInformation(clientInformation, Runtime.getRuntime().availableProcessors(), Runtime.getRuntime().freeMemory(), Runtime.getRuntime().totalMemory());
                 } catch (IOException ex) {
