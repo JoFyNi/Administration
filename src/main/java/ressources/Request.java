@@ -127,13 +127,6 @@ public class Request {
                                 if (e.getSource()==approve) {
                                     setRequest = "reject";
                                     int selectedRow = tablePending.getSelectedRow();
-                                    Object selectedValueUser = tablePending.getModel().getValueAt(selectedRow, 1);
-                                    Object selectedValuePath = tablePending.getModel().getValueAt(selectedRow, 3);
-                                    Object selectedValueServiceTag = tablePending.getModel().getValueAt(selectedRow, 4);
-                                    StringSelection selectionPath = new StringSelection(selectedValuePath.toString());  // selection = path of .exe
-                                    clipboard.setContents(selectionPath, null);
-                                    //processAnswer(requestsPending, selectedValueUser.toString());
-                                    //startInstallationOnClient(selectedValueUser.toString(), selectedValueServiceTag.toString(), selectedValuePath.toString());
                                     tablePending.setValueAt(newStatus[1], selectedRow, 0);
                                 }
                             }
@@ -176,13 +169,6 @@ public class Request {
                                 if (e.getSource()==pending) {
                                     setRequest = "pending";
                                     int selectedRow = tablePending.getSelectedRow();
-                                    Object selectedValueUser = tablePending.getModel().getValueAt(selectedRow, 1);
-                                    Object selectedValuePath = tablePending.getModel().getValueAt(selectedRow, 3);
-                                    Object selectedValueServiceTag = tablePending.getModel().getValueAt(selectedRow, 4);
-                                    StringSelection selectionPath = new StringSelection(selectedValuePath.toString());  // selection = path of .exe
-                                    clipboard.setContents(selectionPath, null);
-                                    //processAnswer(requestsPending, selectedValueUser.toString());
-                                    startInstallationOnClient(selectedValueUser.toString(), selectedValueServiceTag.toString(), selectedValuePath.toString());
                                     tablePending.setValueAt(newStatus[0], selectedRow, 0);
                                 }
                             }
@@ -193,13 +179,6 @@ public class Request {
                                 if (e.getSource()==pending) {
                                     setRequest = "reject";
                                     int selectedRow = tablePending.getSelectedRow();
-                                    Object selectedValueUser = tablePending.getModel().getValueAt(selectedRow, 1);
-                                    Object selectedValuePath = tablePending.getModel().getValueAt(selectedRow, 3);
-                                    Object selectedValueServiceTag = tablePending.getModel().getValueAt(selectedRow, 4);
-                                    StringSelection selectionPath = new StringSelection(selectedValuePath.toString());  // selection = path of .exe
-                                    clipboard.setContents(selectionPath, null);
-                                    //processAnswer(requestsPending, selectedValueUser.toString());
-                                    //startInstallationOnClient(selectedValueUser.toString(), selectedValueServiceTag.toString(), selectedValuePath.toString());
                                     tablePending.setValueAt(newStatus[1], selectedRow, 0);
                                 }
                             }
@@ -259,13 +238,6 @@ public class Request {
                                 if (e.getSource()==pending) {
                                     setRequest = "pending";
                                     int selectedRow = tablePending.getSelectedRow();
-                                    Object selectedValueUser = tablePending.getModel().getValueAt(selectedRow, 1);
-                                    Object selectedValuePath = tablePending.getModel().getValueAt(selectedRow, 3);
-                                    Object selectedValueServiceTag = tablePending.getModel().getValueAt(selectedRow, 4);
-                                    StringSelection selectionPath = new StringSelection(selectedValuePath.toString());  // selection = path of .exe
-                                    clipboard.setContents(selectionPath, null);
-                                    //processAnswer(requestsPending, selectedValueUser.toString());
-                                    //startInstallationOnClient(selectedValueUser.toString(), selectedValueServiceTag.toString(), selectedValuePath.toString());
                                     tablePending.setValueAt(newStatus[1], selectedRow, 0);
                                 }
                             }
