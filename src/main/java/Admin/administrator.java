@@ -1,29 +1,37 @@
-package ressources;
+package Admin;
+
+import ressources.Request;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.File;
+import java.awt.event.*;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.awt.BorderLayout;
 
 import static ressources.Bot.startInstallationOnClient;
 import static ressources.CheckList.setModel;
 
 public class administrator {
-    private String admin = "admin";
+    public static JFrame requestFrame;
+    public static JTable tablePending;
+    public static JTabbedPane tabbedPane;
+    public static JSplitPane splitPane;
+    public static JTextField input;
+    private static Console console;
+    private String admin = "Admin";
     private int adminID = 1111;
     private String adminPassword = "123456";
     private String csvFile;
     static Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     static char[] newStatus = {'t','f','n'};
+    public administrator() {
+
+    }
     public void startAdmin() {
         java.util.Timer timer = new Timer();
         TimerTask task = new TimerTask() {
@@ -40,7 +48,7 @@ public class administrator {
         this.adminID = adminID;
         this.adminPassword = adminPassword;
         this.csvFile = csvFile;
-        System.out.println("admin " + admin + "  adminID " + adminID + "  adminPassword " + adminPassword);
+        System.out.println("Admin " + admin + "  adminID " + adminID + "  adminPassword " + adminPassword);
     }
     public static void getRequests(List<Request> requestsPending, String user){
         //System.out.println("Request from >>>" + user + "<<< to applied to administrator");
@@ -53,9 +61,6 @@ public class administrator {
         //Bot.startInstallationOnClient(requestsPending, checkUser);
         // rücksignal/ rückmeldung -> bot, startet methode startInstallationOnClient(...request...beschreibung(programm)) -> client erhält signal -> installation -> anfrage wird gelöscht da, fertig
     }
-    public static JFrame requestFrame;
-    public static JTable tablePending;
-    public static JTabbedPane tabbedPane;
     public static void displayPending(List<Request> requestsPending) {
         // Create column names
         String[] columnNamesPending = {"status", "user", "email", "path", "host", "date"};
@@ -145,13 +150,23 @@ public class administrator {
                     selectedValue = null;
                 }
             });
-
+            input = new JTextField();
+            input.addActionListener(e -> {
+                console.getOutputComponent(input.getText());
+                input.setText("");
+                // Verarbeiten Sie die Eingabe hier
+            });
             requestFrame = new JFrame("[Admin]Requests:  [Pending " + requestsPending.size() + "]");
             requestFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             tabbedPane = new JTabbedPane();
+            console = new Console();
             tabbedPane.addTab("Pending", new JScrollPane(tablePending));
-            requestFrame.add(tabbedPane);
-            requestFrame.setSize(600, 800);
+            splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabbedPane, new JScrollPane(console.getOutputComponent(input.getText())));
+            splitPane.setResizeWeight(0.7);
+            requestFrame.add(splitPane, BorderLayout.CENTER);
+            requestFrame.add(input, BorderLayout.SOUTH);
+            //requestFrame.add(tabbedPane);
+            requestFrame.setSize(1200, 1600);
             requestFrame.pack();
             requestFrame.setVisible(true);
         } else {
