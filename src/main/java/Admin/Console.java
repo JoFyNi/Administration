@@ -2,6 +2,7 @@ package Admin;
 
 import javax.swing.*;
 import java.io.*;
+import java.util.Scanner;
 
 public class Console {
     private JTextArea consoleOutput;
@@ -12,35 +13,55 @@ public class Console {
     }
 
     public void processCommand(String command) {
-        switch (command) {
-            case "start update":
-                startUpdate();
-                break;
-            case "open disk management":
-                openDiskManagement();
-                break;
-            case "help":
-                consoleOutput.append(" - start update -> looking for updates and starting them \n" +
-                        " - open disk management ->  Opening disk management \n" +
-                        " - approved clients -> list of all approved requests \n");
-                break;
-            case "approved clients":
-                try {
-                    getInfoPool();
-                } catch (FileNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-                break;
-            default:
-                consoleOutput.append(" Unknown command, tippe help for help\n");
-                break;
+        if (command.matches("update client .*")) {
+            String[] splitCommand = command.split(" ");
+            String client = splitCommand[2];
+            startClientUpdate(client);
+        } else {
+            switch (command) {
+                case "update server":
+                    startUpdate();
+                    break;
+                case "update client":
+                    consoleOutput.append(" tippe a serviceTag -> example: update Client G2HS52 \n");
+                    break;
+                case "open disk management":
+                    openDiskManagement();
+                    break;
+                case "help":
+                    consoleOutput.append(" - update server -> starting Windows updates on server \n" +
+                            " - update client [serviceTag] -> starting Windows updates on client \n " +
+                            " - open disk management ->  Opening disk management \n" +
+                            " - approved clients -> list of all approved requests \n");
+                    break;
+                case "approved clients":
+                    try {
+                        getInfoPool();
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                    break;
+                default:
+                    consoleOutput.append(" Unknown command, tippe help for help\n");
+                    break;
+            }
         }
     }
 
     private void startUpdate() {
         consoleOutput.append(" Starting update...\n");
         try {
-            Runtime.getRuntime().exec("src/main/java/Admin/Commands/WindowsUpdate.bat");
+            Runtime.getRuntime().exec("src/main/java/Admin/Commands/WindowsUpdate.ps1");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void startClientUpdate(String client) {
+        consoleOutput.append(" Starting update on " + client + "\n");
+        try {
+            String sendCommand = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File src/main/java/Admin/Commands/WindowsUpdate.ps1 " + client;
+            System.out.println(sendCommand);
+            Runtime.getRuntime().exec(sendCommand);
         } catch (IOException e) {
             e.printStackTrace();
         }
