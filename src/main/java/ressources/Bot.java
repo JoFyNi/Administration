@@ -51,6 +51,8 @@ public class Bot {
                     requestsApproved.add(request);
                 } else if(request.status == 'f' || request.status == 'F'){      // rejected Request
                     requestsRejected.add(request);
+                } else {
+                    //System.out.println("no more request");
                 }
             }
             System.out.println("pending: " + requestsPending.size() +"  approve: " + requestsApproved.size() + "  rejected: " + requestsRejected.size());
@@ -86,7 +88,7 @@ public class Bot {
     }
     public static void startInstallationOnClient(String user, String serviceTag, String path) {
         System.out.println("Installation: " + path + "  >>>  " + user + ":" + serviceTag);
-        String Administrator = ""; // add Administrator (local admin)
+        String Administrator = " "; // add Administrator (local admin)
         try {
             JSch jsch = new JSch();
             Session session = jsch.getSession(user, serviceTag);    // serviceTag zu ip abändern?
@@ -104,7 +106,7 @@ public class Bot {
             InputStream in=channel.getInputStream();
             channel.connect();
 
-            byte[] tmp=new byte[1024];
+            byte[] tmp=new byte[messageValue];
             while(true){
                 while(in.available()>0){
                     int i=in.read(tmp, 0, messageValue);
