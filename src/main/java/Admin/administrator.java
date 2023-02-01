@@ -7,6 +7,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.*;
 import java.util.List;
 import java.util.Timer;
@@ -81,7 +82,9 @@ public class administrator {
                 JPopupMenu popupMenu = new JPopupMenu();
                 JMenuItem approve = new JMenuItem("approve");
                 JMenuItem reject = new JMenuItem("reject");
-                JMenuItem copyPathItem = new JMenuItem("copy path");
+                JMenuItem copyPath = new JMenuItem("copy path");
+                JMenuItem copyServiceTag = new JMenuItem("copy serviceTag");
+                JMenuItem copyName = new JMenuItem("copy name");
                 JMenuItem checkList = new JMenuItem("compare with checkList");
                 JLabel label = new JLabel();
                 String selectedValue = null;;
@@ -95,7 +98,9 @@ public class administrator {
                     if (SwingUtilities.isRightMouseButton(e)){
                         popupMenu.add(approve);
                         popupMenu.add(reject);
-                        popupMenu.add(copyPathItem);
+                        popupMenu.add(copyPath);
+                        popupMenu.add(copyServiceTag);
+                        popupMenu.add(copyName);
                         popupMenu.add(checkList);
                         popupMenu.show(e.getComponent(), e.getX(), e.getY());
                         approve.addActionListener(new ActionListener() {
@@ -104,9 +109,9 @@ public class administrator {
                                 if (e.getSource()==approve) {
                                     answer = "approve";
                                     int selectedRow = tablePending.getSelectedRow();
-                                    Object selectedValueUser = tablePending.getModel().getValueAt(selectedRow, 1);
-                                    Object selectedValuePath = tablePending.getModel().getValueAt(selectedRow, 3);
-                                    Object selectedValueServiceTag = tablePending.getModel().getValueAt(selectedRow, 4);
+                                    Object selectedValueUser = tablePending.getValueAt(selectedRow, 1);
+                                    Object selectedValuePath = tablePending.getValueAt(selectedRow, 3);
+                                    Object selectedValueServiceTag = tablePending.getValueAt(selectedRow, 4);
                                     StringSelection selectionPath = new StringSelection(selectedValuePath.toString());  // selection = path of .exe
                                     clipboard.setContents(selectionPath, null);
                                     processAnswer(requestsPending, selectedValueUser.toString());
@@ -126,23 +131,40 @@ public class administrator {
                                 // send dialog to checkUser...
                             }
                         });
-                        copyPathItem.addActionListener(new ActionListener() {
+                        copyPath.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 int selectedRow = tablePending.getSelectedRow();
-                                Object selectedValue = tablePending.getModel().getValueAt(selectedRow, 3);
+                                Object selectedValue = tablePending.getValueAt(selectedRow, 3);
                                 StringSelection selection = new StringSelection(selectedValue.toString());
                                 clipboard.setContents(selection, null);
-                                System.out.println(clipboard);
+                            }
+                        });
+                        copyServiceTag.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                int selectedRow = tablePending.getSelectedRow();
+                                Object selectedValueServiceTag = tablePending.getValueAt(selectedRow, 4);
+                                StringSelection selection = new StringSelection(selectedValueServiceTag.toString());
+                                clipboard.setContents(selection, null);
+                            }
+                        });
+                        copyName.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                int selectedRow = tablePending.getSelectedRow();
+                                Object selectedValueUser = tablePending.getValueAt(selectedRow, 1);
+                                StringSelection selection = new StringSelection(selectedValueUser.toString());
+                                clipboard.setContents(selection, null);
                             }
                         });
                         checkList.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 int selectedRow = tablePending.getSelectedRow();
-                                Object selectedValueUser = tablePending.getModel().getValueAt(selectedRow, 1);
-                                Object selectedValuePath = tablePending.getModel().getValueAt(selectedRow, 3);
-                                Object selectedValueServiceTag = tablePending.getModel().getValueAt(selectedRow, 4);
+                                Object selectedValueUser = tablePending.getValueAt(selectedRow, 1);
+                                Object selectedValuePath = tablePending.getValueAt(selectedRow, 3);
+                                Object selectedValueServiceTag = tablePending.getValueAt(selectedRow, 4);
                                 setModel(selectedValueUser.toString(), selectedValueServiceTag.toString(), selectedValuePath.toString());
                             }
                         });
