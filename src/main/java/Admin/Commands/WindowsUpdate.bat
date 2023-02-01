@@ -1,2 +1,4 @@
 @echo off
-start wuapp
+cd /d %windir%\system32
+net start wuauserv
+start /wait wuapp.exe
