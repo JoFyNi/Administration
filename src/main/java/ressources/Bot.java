@@ -108,7 +108,7 @@ public class Bot {
             byte[] tmp=new byte[1024];
             while(true){
                 while(in.available()>0){
-                    int i=in.read(tmp, 0, 1024);
+                    int i=in.read(tmp, 0, messageValue);
                     if(i<0)break;
                     System.out.print(new String(tmp, 0, i));
                 }
@@ -136,7 +136,7 @@ public class Bot {
         //}
     }
     public static void getInformation(String clientInfo, int processor, long freeMemory, long totalMemory) throws IOException {
-        System.out.println(clientInfo + "\n" + "processor: " + processor + " " + "freeMemory: " + freeMemory + " " + "totalMemory: " + totalMemory);
+        System.out.println(clientInfo + "\n" + "processor: " + processor + "  freeMemory: " + freeMemory + "  totalMemory: " + totalMemory);
         File clientInfoFile = new File("src/main/java/Clients/clientInfos.txt");
         FileWriter fileWriter = new FileWriter(clientInfoFile, true);
         fileWriter.append(clientInfo);
