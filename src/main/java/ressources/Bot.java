@@ -29,7 +29,7 @@ public class Bot {
                 updateRequests(requestsPending, requestsApproved, requestsRejected);
             }
         };
-        timer.schedule(task, 0, 10000);     // run all 10 seconds
+        timer.schedule(task, 0, 20000);     // run all 20 seconds
     }
     private void checkRequests() {
         String line = "";
@@ -52,8 +52,6 @@ public class Bot {
                     requestsApproved.add(request);
                 } else if(request.status == 'f' || request.status == 'F'){      // rejected Request
                     requestsRejected.add(request);
-                } else {
-                    //System.out.println("no more request");
                 }
             }
             System.out.println("pending: " + requestsPending.size() +"  approve: " + requestsApproved.size() + "  rejected: " + requestsRejected.size());
