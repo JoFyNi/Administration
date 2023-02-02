@@ -1,6 +1,5 @@
 package ressources;
 
-import Admin.administrator;
 import com.jcraft.jsch.*;
 import java.io.*;
 import java.net.InetAddress;
@@ -10,7 +9,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static ressources.Request.displayRequests;
-import static Admin.administrator.displayPending;
 import static ressources.connection.*;
 
 public class Bot {
@@ -24,12 +22,11 @@ public class Bot {
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             public void run() {
-                //connector.run();
                 System.out.println("check for requests");
                 updateRequests(requestsPending, requestsApproved, requestsRejected);
             }
         };
-        timer.schedule(task, 0, 20000);     // run all 20 seconds
+        timer.schedule(task, 0, 10000);     // run all 10 seconds
     }
     private void checkRequests() {
         String line = "";
@@ -46,7 +43,6 @@ public class Bot {
                 request.host = data[4];
                 request.currentDate = data[5];
                 if(request.status == 'n' || request.status == 'N') {            // new Request
-                    sendRequests(requestsPending, request.user);
                     requestsPending.add(request);
                 } else if(request.status == 't' || request.status == 'T'){      // approved Request
                     requestsApproved.add(request);
@@ -58,8 +54,7 @@ public class Bot {
         } catch (Exception e) {
             System.exit(1);
         }
-        getRequests(requestsPending, requestsApproved, requestsRejected);
-        displayPending(requestsPending);
+        displayRequests(requestsPending, requestsApproved, requestsRejected);
     }
     public void updateRequests(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
         requestsPending.clear();
@@ -67,24 +62,7 @@ public class Bot {
         requestsRejected.clear();
         checkRequests();
     }
-    public void getRequests(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
-        displayRequests(requestsPending, requestsApproved, requestsRejected);
-    }
-    private void sendRequests(List<Request> requestsPending, String user) {
-        boolean userExists = false;
-        for (Request request : requestsPending) {
-            if (request.user.equals(user)) {
-                userExists = true;
-                break;
-            }
-        }
-        if (userExists) {
-            //System.out.println("No new request for user: " + user);
-        } else {
-            //.out.println("Sending requests from >>>" + user + "<<< to Administrator");
-            administrator.getRequests(requestsPending, user);
-        }
-    }
+
     public static void startInstallationOnClient(String user, String serviceTag, String path) {
         System.out.println("Installation: " + path + "  >>>  " + user + ":" + serviceTag);
         String Administrator = " "; // add Administrator (local admin)
