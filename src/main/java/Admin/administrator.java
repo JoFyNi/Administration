@@ -9,6 +9,9 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -16,6 +19,8 @@ import java.awt.BorderLayout;
 
 import static ressources.Bot.startInstallationOnClient;
 import static ressources.CheckList.setModel;
+import static ressources.connection.*;
+import static ressources.connection.requestsRejected;
 
 public class administrator {
     public static JFrame requestFrame;
@@ -30,15 +35,15 @@ public class administrator {
     private String csvFile;
     static Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     static char[] newStatus = {'t','f','n'};
-    public administrator() {
 
+    public administrator() {
     }
     public void startAdmin() {
         java.util.Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             public void run() {
                 System.out.println("check for requests");
-                new administrator(admin, adminID, adminPassword, csvFile);
+                updateRequests(requestsPending, requestsApproved, requestsRejected);
             }
         };
         timer.schedule(task, 0, 10000);     // run all 10 seconds
@@ -51,16 +56,39 @@ public class administrator {
         this.csvFile = csvFile;
         System.out.println("Admin " + admin + "  adminID " + adminID + "  adminPassword " + adminPassword);
     }
-    public static void getRequests(List<Request> requestsPending, String user){
-        //System.out.println("Request from >>>" + user + "<<< to applied to administrator");
+    private void checkRequests() {
+        String line = "";
+        String cvsSplitBy = ",";
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+            while ((line = br.readLine()) != null) {
+                // use comma as separator
+                String[] data = line.split(cvsSplitBy);
+                Request request = new Request();
+                request.status = data[0].charAt(0);
+                request.user = data[1];
+                request.email = data[2];
+                request.path = data[3];
+                request.host = data[4];
+                request.currentDate = data[5];
+                if(request.status == 'n' || request.status == 'N') {            // new Request
+                    requestsPending.add(request);
+                } else if(request.status == 't' || request.status == 'T'){      // approved Request
+                    requestsApproved.add(request);
+                } else if(request.status == 'f' || request.status == 'F'){      // rejected Request
+                    requestsRejected.add(request);
+                }
+            }
+            System.out.println("pending: " + requestsPending.size());
+        } catch (Exception e) {
+            System.exit(1);
+        }
         displayPending(requestsPending);
-        // verarbeiten -> auswahl Append or deny
-        // rücksignal/ rückmeldung -> bot, startet methode startInstallationOnClient(...request...beschreibung(programm)) -> client erhält signal -> installation -> anfrage wird gelöscht da, fertig
     }
-    public static void processAnswer(List<Request> requestsPending, String user){
-        System.out.println(user);
-        //Bot.startInstallationOnClient(requestsPending, checkUser);
-        // rücksignal/ rückmeldung -> bot, startet methode startInstallationOnClient(...request...beschreibung(programm)) -> client erhält signal -> installation -> anfrage wird gelöscht da, fertig
+    public void updateRequests(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
+        requestsPending.clear();
+        requestsApproved.clear();
+        requestsRejected.clear();
+        checkRequests();
     }
     public static void displayPending(List<Request> requestsPending) {
         // Create column names
@@ -79,15 +107,16 @@ public class administrator {
             // Create a new table instance
             tablePending = new JTable(dataPending, columnNamesPending);
             tablePending.addMouseListener(new MouseAdapter() {
-                JPopupMenu popupMenu = new JPopupMenu();
-                JMenuItem approve = new JMenuItem("approve");
-                JMenuItem reject = new JMenuItem("reject");
-                JMenuItem copyPath = new JMenuItem("copy path");
-                JMenuItem copyServiceTag = new JMenuItem("copy serviceTag");
-                JMenuItem copyName = new JMenuItem("copy name");
-                JMenuItem checkList = new JMenuItem("compare with checkList");
-                JLabel label = new JLabel();
-                String selectedValue = null;;
+                final JPopupMenu popupMenu = new JPopupMenu();
+                final JMenuItem approve = new JMenuItem("approve");
+                final JMenuItem reject = new JMenuItem("reject");
+                final JMenuItem copyPath = new JMenuItem("copy path");
+                final JMenuItem copyServiceTag = new JMenuItem("copy serviceTag");
+                final JMenuItem copyName = new JMenuItem("copy name");
+                final JMenuItem checkList = new JMenuItem("compare with checkList");
+                final JLabel label = new JLabel();
+                String selectedValue = null;
+
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (SwingUtilities.isLeftMouseButton(e)){
@@ -197,5 +226,11 @@ public class administrator {
             // updating the counter from the title bar
             requestFrame.setTitle("Requests:  [Pending " + requestsPending.size() + "]");
         }
+    }
+
+    public static void processAnswer(List<Request> requestsPending, String user){
+        System.out.println(user);
+        //Bot.startInstallationOnClient(requestsPending, checkUser);
+        // rücksignal/ rückmeldung -> bot, startet methode startInstallationOnClient(...request...beschreibung(programm)) -> client erhält signal -> installation -> anfrage wird gelöscht da, fertig
     }
 }
