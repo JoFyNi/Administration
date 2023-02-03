@@ -1,5 +1,3 @@
-package Admin;
-
 import javax.swing.*;
 import java.io.*;
 import java.net.Inet4Address;
@@ -82,9 +80,9 @@ public class Console {
     }
 
     public void getInfoPool() throws FileNotFoundException {
-        File clientInfoFile = new File("src/main/java/Clients/clientInfos.txt");
+        File clientInfoFile = new File("ClientRequestCreator/src/main/java/Clients/clientInfos.txt");
         try {
-            BufferedReader clientReader = new BufferedReader(new FileReader(clientInfoFile));
+            BufferedReader clientReader = new BufferedReader(new FileReader(clientInfoFile.getAbsolutePath()));
             String line;
             while ((line = clientReader.readLine()) != null) {
                 consoleOutput.append(" " + line + "\n");

@@ -1,7 +1,3 @@
-package Admin;
-
-import static ressources.connection.multicastPORT;
-
 public class Main {
     static String csvFile = "src/main/db/fourHeader.csv";
 

@@ -3,28 +3,21 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
-        <entry key="\AdminGUI\src\main\db\fourHeader.csv">
+        <entry key="\admin\src\main\db\fourHeader.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
             </Attribute>
           </value>
         </entry>
-        <entry key="\AdminGUI\src\main\db\test.csv">
+        <entry key="\src\main\db\fourHeader.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
             </Attribute>
           </value>
         </entry>
-        <entry key="\BOT\src\main\db\fourHeader.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="\BOT\src\main\db\request.csv">
+        <entry key="\src\main\db\request.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

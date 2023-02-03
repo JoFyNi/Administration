@@ -1,7 +1,5 @@
 package ressources;
 
-import Clients.user;
-
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -10,7 +8,6 @@ import static ressources.connection.*;
 
 public class Connector extends NetworkClient {
     private static MulticastSocket mySocket;
-    private Vector<user>userList;
     public Connector(int port) {
         super(port);
     }

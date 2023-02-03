@@ -1,7 +1,3 @@
-package Admin;
-
-import ressources.Request;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -9,9 +5,6 @@ import java.net.DatagramPacket;
 import java.net.MulticastSocket;
 import java.net.Socket;
 import java.util.List;
-
-import static ressources.connection.messageValue;
-import static ressources.connection.multicastIP;
 
 public class AdminConnector extends AdminNetworkClient {
     private static MulticastSocket mySocket;
@@ -25,8 +18,8 @@ public class AdminConnector extends AdminNetworkClient {
     public void connect() {
         // Implement server-specific connection logic
         try {
-            socket = new Socket(multicastIP, multicastPORT);
-            System.out.println("Verbunden mit Server " + multicastIP + " auf Port " + multicastPORT);
+            socket = new Socket(connection.multicastIP, multicastPORT);
+            System.out.println("Verbunden mit Server " + connection.multicastIP + " auf Port " + multicastPORT);
 
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
@@ -46,13 +39,13 @@ public class AdminConnector extends AdminNetworkClient {
     }
 
     public static List<Request> packageReceive(List<Request> requestsPending) throws IOException {
-        byte[] buffer = new byte[messageValue];
+        byte[] buffer = new byte[connection.messageValue];
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
         mySocket.receive(packet);
         return requestsPending;
     }
     public static byte[] sendingPackage(List<Request> requestsPending) throws IOException {
-        byte[] buffer = new byte[messageValue];
+        byte[] buffer = new byte[connection.messageValue];
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
         mySocket.send(packet);
         return buffer;

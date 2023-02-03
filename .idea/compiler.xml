@@ -6,9 +6,8 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="AdminGUI" />
-        <module name="BOT" />
-        <module name="ClientGUI" />
+        <module name="admin" />
+        <module name="ClientRequestCreator" />
       </profile>
     </annotationProcessing>
   </component>

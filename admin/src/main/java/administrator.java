@@ -1,26 +1,15 @@
-package Admin;
-
-import ressources.Request;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
 import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.awt.BorderLayout;
-
-import static ressources.Bot.startInstallationOnClient;
-import static ressources.CheckList.setModel;
-import static ressources.connection.*;
-import static ressources.connection.requestsRejected;
 
 public class administrator {
     public static JFrame requestFrame;
@@ -38,15 +27,16 @@ public class administrator {
 
     public administrator() {
     }
-    public void startAdmin() {
+    public int startAdmin() {
         java.util.Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             public void run() {
                 System.out.println("check for requests");
-                updateRequests(requestsPending, requestsApproved, requestsRejected);
+                updateRequests(connection.requestsPending, connection.requestsApproved, connection.requestsRejected);
             }
         };
         timer.schedule(task, 0, 10000);     // run all 10 seconds
+        return 0;
     }
     public static String answer = "pending";
     public administrator(String admin, int adminID, String adminPassword, String csvFile) {
@@ -71,18 +61,18 @@ public class administrator {
                 request.host = data[4];
                 request.currentDate = data[5];
                 if(request.status == 'n' || request.status == 'N') {            // new Request
-                    requestsPending.add(request);
+                    connection.requestsPending.add(request);
                 } else if(request.status == 't' || request.status == 'T'){      // approved Request
-                    requestsApproved.add(request);
+                    connection.requestsApproved.add(request);
                 } else if(request.status == 'f' || request.status == 'F'){      // rejected Request
-                    requestsRejected.add(request);
+                    connection.requestsRejected.add(request);
                 }
             }
-            System.out.println("pending: " + requestsPending.size());
+            System.out.println("pending: " + connection.requestsPending.size());
         } catch (Exception e) {
             System.exit(1);
         }
-        displayPending(requestsPending);
+        displayPending(connection.requestsPending);
     }
     public void updateRequests(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
         requestsPending.clear();
@@ -144,7 +134,6 @@ public class administrator {
                                     StringSelection selectionPath = new StringSelection(selectedValuePath.toString());  // selection = path of .exe
                                     clipboard.setContents(selectionPath, null);
                                     processAnswer(requestsPending, selectedValueUser.toString());
-                                    startInstallationOnClient(selectedValueUser.toString(), selectedValueServiceTag.toString(), selectedValuePath.toString());
                                     tablePending.setValueAt(newStatus[0], selectedRow, 0);
                                 }
                             }
@@ -194,7 +183,7 @@ public class administrator {
                                 Object selectedValueUser = tablePending.getValueAt(selectedRow, 1);
                                 Object selectedValuePath = tablePending.getValueAt(selectedRow, 3);
                                 Object selectedValueServiceTag = tablePending.getValueAt(selectedRow, 4);
-                                setModel(selectedValueUser.toString(), selectedValueServiceTag.toString(), selectedValuePath.toString());
+                                //CheckList.setModel(selectedValueUser.toString(), selectedValueServiceTag.toString(), selectedValuePath.toString());
                             }
                         });
                     }

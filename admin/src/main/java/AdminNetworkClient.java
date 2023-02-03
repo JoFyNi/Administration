@@ -1,5 +1,3 @@
-package Admin;
-
 public class AdminNetworkClient {
     protected int multicastPORT;
 

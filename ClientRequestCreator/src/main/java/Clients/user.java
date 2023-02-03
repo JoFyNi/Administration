@@ -6,8 +6,6 @@ import javax.swing.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Date;
 
 import static ressources.Bot.getInformation;
@@ -59,7 +57,7 @@ public class user {
                     addRequest("n," + name + ", " +  email + ", " + path + ", " + Inet4Address.getLocalHost() + ", " + currentDate +"\n");
                     Bot.getByAddress(Inet4Address.getLocalHost().toString(), Inet4Address.getLocalHost().getAddress());
                     String clientInformation = name + " , " + email + " , " + path + " , " + Inet4Address.getLocalHost() + " , " + currentDate + "\n";
-                    getInformation(clientInformation, Runtime.getRuntime().availableProcessors(), Runtime.getRuntime().freeMemory(), Runtime.getRuntime().totalMemory());
+                    Bot.getInformation(clientInformation, Runtime.getRuntime().availableProcessors(), Runtime.getRuntime().freeMemory(), Runtime.getRuntime().totalMemory());
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
