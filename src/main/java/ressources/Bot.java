@@ -18,7 +18,7 @@ public class Bot {
         this.csvFile = csvFile;
         System.out.println("Bot: [" + botName + ":" + botId+ "  " + botType + " permission" + "] starting");
     }
-    public void startBot() {
+    public int startBot() {
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             public void run() {
@@ -27,6 +27,7 @@ public class Bot {
             }
         };
         timer.schedule(task, 0, 10000);     // run all 10 seconds
+        return 0;
     }
     private void checkRequests() {
         String line = "";
