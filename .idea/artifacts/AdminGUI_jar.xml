@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="AdminGUI:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/AdminGUI_jar</output-path>
+    <root id="archive" name="AdminGUI.jar">
+      <element id="module-output" name="AdminGUI" />
+    </root>
+  </artifact>
+</component>
