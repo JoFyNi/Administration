@@ -18,6 +18,7 @@ connection Interface:
  - for better communication between the classes
  
 For what you can use it:
+- Administration tool to handle installation request from employees in a local network
 - gathering information for the Administration from employees.
 - improve the code and make a Ticket system out of it.
 - use it for monitoring a file (in this case a csv file)
