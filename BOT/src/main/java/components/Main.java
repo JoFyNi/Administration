@@ -1,7 +1,8 @@
-package ressources;
+package components;
 
 public class Main {
-    static String csvFile = "src/main/db/fourHeader.csv";
+    static String csvFile = "BOT/src/main/db/fourHeader.csv";
+
     // random generated csv file from  https://www.convertcsv.com/generate-test-data.htm
     public static void main(String[] args) {
         try {

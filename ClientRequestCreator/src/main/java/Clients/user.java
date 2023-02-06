@@ -1,6 +1,5 @@
 package Clients;
 
-import ressources.Bot;
 
 import javax.swing.*;
 import java.io.FileWriter;
@@ -8,7 +7,6 @@ import java.io.IOException;
 import java.net.Inet4Address;
 import java.util.Date;
 
-import static ressources.Bot.getInformation;
 
 public class user {
     private static final String csvFile = "src/main/db/fourHeader.csv";
@@ -55,9 +53,9 @@ public class user {
             } else {
                 try {
                     addRequest("n," + name + ", " +  email + ", " + path + ", " + Inet4Address.getLocalHost() + ", " + currentDate +"\n");
-                    Bot.getByAddress(Inet4Address.getLocalHost().toString(), Inet4Address.getLocalHost().getAddress());
+                    //Bot.getByAddress(Inet4Address.getLocalHost().toString(), Inet4Address.getLocalHost().getAddress());
                     String clientInformation = name + " , " + email + " , " + path + " , " + Inet4Address.getLocalHost() + " , " + currentDate + "\n";
-                    Bot.getInformation(clientInformation, Runtime.getRuntime().availableProcessors(), Runtime.getRuntime().freeMemory(), Runtime.getRuntime().totalMemory());
+                    //Bot.getInformation(clientInformation, Runtime.getRuntime().availableProcessors(), Runtime.getRuntime().freeMemory(), Runtime.getRuntime().totalMemory());
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }

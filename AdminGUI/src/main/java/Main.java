@@ -1,5 +1,5 @@
 public class Main {
-    static String csvFile = "src/main/db/fourHeader.csv";
+    static String csvFile = "AdminGUI/src/main/db/fourHeader.csv";
 
     public static void main(String[] args) {
         try {
