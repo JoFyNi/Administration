@@ -26,19 +26,21 @@ For what you can use it:
 
 Request Frame that lists all requests (n=Pending/ t=Approved/ f=Rejected):
 
-![img.png](img.png)
-
+![img.png](img.png)![img_1.png](img_1.png)![img_2.png](img_2.png)
 
 
 Request Frame for the new request (Pending):
 
-![img_1.png](img_1.png)
+![img_3.png](img_3.png)
 
+Console from frame with some info commands
+
+![img_4.png](img_4.png)
 
 
 Frame for a new Request:
 
-![img_2.png](img_2.png)
+![img_5.png](img_5.png)
 
-![img_3.png](img_3.png)
 
+The listed employees are randomly generated and therefore not real
