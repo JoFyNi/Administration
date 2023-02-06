@@ -28,6 +28,8 @@ Request Frame that lists all requests (n=Pending/ t=Approved/ f=Rejected):
 
 ![img.png](img.png)![img_1.png](img_1.png)![img_2.png](img_2.png)
 
+notice: The listed employees are randomly generated and therefore not real
+        The most of the path names are random generated Char's, just the last 10 results are real path generated with the user class(created requests)
 
 Request Frame for the new request (Pending):
 
@@ -42,5 +44,3 @@ Frame for a new Request:
 
 ![img_5.png](img_5.png)
 
-
-The listed employees are randomly generated and therefore not real
