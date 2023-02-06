@@ -5,7 +5,10 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -21,7 +24,7 @@ public class administrator {
     private String admin = "Admin";
     private int adminID = 1111;
     private String adminPassword = "123456";
-    private String csvFile;
+    private static String csvFile;
     static Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     static char[] newStatus = {'t','f','n'};
 
@@ -46,7 +49,7 @@ public class administrator {
         this.csvFile = csvFile;
         System.out.println("Admin " + admin + "  adminID " + adminID + "  adminPassword " + adminPassword);
     }
-    private void checkRequests() {
+    private static void checkRequests() {
         String line = "";
         String cvsSplitBy = ",";
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
@@ -74,7 +77,7 @@ public class administrator {
         }
         displayPending(connection.requestsPending);
     }
-    public void updateRequests(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
+    public static void updateRequests(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
         requestsPending.clear();
         requestsApproved.clear();
         requestsRejected.clear();
@@ -125,28 +128,87 @@ public class administrator {
                         approve.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                if (e.getSource()==approve) {
-                                    answer = "approve";
-                                    int selectedRow = tablePending.getSelectedRow();
+                                answer = "approve";
+                                int selectedRow = tablePending.getSelectedRow();
+                                if (selectedRow != -1) {
                                     Object selectedValueUser = tablePending.getValueAt(selectedRow, 1);
+                                    Object selectedValueEmail = tablePending.getValueAt(selectedRow, 2);
                                     Object selectedValuePath = tablePending.getValueAt(selectedRow, 3);
                                     Object selectedValueServiceTag = tablePending.getValueAt(selectedRow, 4);
-                                    StringSelection selectionPath = new StringSelection(selectedValuePath.toString());  // selection = path of .exe
-                                    clipboard.setContents(selectionPath, null);
-                                    processAnswer(requestsPending, selectedValueUser.toString());
-                                    tablePending.setValueAt(newStatus[0], selectedRow, 0);
+                                    Object selectedValueDate = tablePending.getValueAt(selectedRow, 5);
+
+                                    String newLine = "t" + "," + selectedValueUser.toString() + "," + selectedValueEmail.toString() + "," + selectedValuePath.toString() + "," + selectedValueServiceTag.toString() + "," + selectedValueDate.toString();
+                                    List<String> lines = new ArrayList<>();
+                                    String line;
+                                    try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+                                        while ((line = br.readLine()) != null) {
+                                            lines.add(line);
+                                        }
+                                        br.close();
+                                        if (!lines.contains(newLine)) {
+                                            lines.set(selectedRow, newLine);
+                                            System.out.println("newLine = " + newLine);
+                                            System.out.println("selectedRow = " + selectedRow);
+                                            BufferedWriter bw = new BufferedWriter(new FileWriter(csvFile, false));
+                                            for (String lineToWrite : lines) {
+                                                bw.write(lineToWrite);
+                                                bw.newLine();
+                                            }
+                                            bw.close();
+                                        } else {
+                                            System.out.println("Line already exists, no new line created");
+                                        }
+                                    } catch (Exception ee) {
+                                        System.out.println(ee.getMessage());
+                                    }
+                                    updateRequests(connection.requestsPending, connection.requestsApproved, connection.requestsRejected);
+                                    DefaultTableModel model = (DefaultTableModel) tablePending.getModel();
+                                    model.removeRow(selectedRow);
+                                    model.insertRow(selectedRow, newLine.split(","));
                                 }
                             }
                         });
                         reject.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                answer = "reject";
-                                System.out.println("reject");
-                                // rücksignal/ rückmeldung -> bot, startet methode deny request -> client erhält Nachicht "abgelehnt weil, ....."
+                                answer = "approve";
                                 int selectedRow = tablePending.getSelectedRow();
-                                tablePending.setValueAt(newStatus[1], selectedRow, 0);
-                                // send dialog to checkUser...
+                                if (selectedRow != -1) {
+                                    Object selectedValueUser = tablePending.getValueAt(selectedRow, 1);
+                                    Object selectedValueEmail = tablePending.getValueAt(selectedRow, 2);
+                                    Object selectedValuePath = tablePending.getValueAt(selectedRow, 3);
+                                    Object selectedValueServiceTag = tablePending.getValueAt(selectedRow, 4);
+                                    Object selectedValueDate = tablePending.getValueAt(selectedRow, 5);
+
+                                    String newLine = "f" + "," + selectedValueUser.toString() + "," + selectedValueEmail.toString() + "," + selectedValuePath.toString() + "," + selectedValueServiceTag.toString() + "," + selectedValueDate.toString();
+                                    List<String> lines = new ArrayList<>();
+                                    String line;
+                                    try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+                                        while ((line = br.readLine()) != null) {
+                                            lines.add(line);
+                                        }
+                                        br.close();
+                                        if (!lines.contains(newLine)) {
+                                            lines.set(selectedRow, newLine);
+                                            System.out.println("newLine = " + newLine);
+                                            System.out.println("selectedRow = " + selectedRow);
+                                            BufferedWriter bw = new BufferedWriter(new FileWriter(csvFile, false));
+                                            for (String lineToWrite : lines) {
+                                                bw.write(lineToWrite);
+                                                bw.newLine();
+                                            }
+                                            bw.close();
+                                        } else {
+                                            System.out.println("Line already exists, no new line created");
+                                        }
+                                    } catch (Exception ee) {
+                                        System.out.println(ee.getMessage());
+                                    }
+                                    updateRequests(connection.requestsPending, connection.requestsApproved, connection.requestsRejected);
+                                    DefaultTableModel model = (DefaultTableModel) tablePending.getModel();
+                                    model.removeRow(selectedRow);
+                                    model.insertRow(selectedRow, newLine.split(","));
+                                }
                             }
                         });
                         copyPath.addActionListener(new ActionListener() {
