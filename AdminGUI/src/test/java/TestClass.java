@@ -23,15 +23,15 @@ public class TestClass {
         administrator admin = new administrator("admin", 1, "admin", csvFile);
         Assert.assertEquals(0, admin.startAdmin());
 
-        String pending = "n";
-        String approved = "f";
-        String rejected = "t";
-        double result = admin.checkRequests(pending, approved, rejected);
+        //String pending = "n";
+        //String approved = "f";
+        //String rejected = "t";
+        //double result = admin.checkRequests(pending, approved, rejected);
 
-        java.util.List<Request> pendingList = new ArrayList<>();
-        java.util.List<Request> approvedList = new ArrayList<>();
-        java.util.List<Request> rejectedList = new ArrayList<>();
-        boolean resultat = admin.updateRequests(pendingList, approvedList, rejectedList);
+        //java.util.List<Request> pendingList = new ArrayList<>();
+        //java.util.List<Request> approvedList = new ArrayList<>();
+        //java.util.List<Request> rejectedList = new ArrayList<>();
+        //boolean resultat = admin.updateRequests(pendingList, approvedList, rejectedList);
 
 
         //überprüfen der einzelnen methoden

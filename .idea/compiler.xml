@@ -14,7 +14,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="AdminGUI" options="--add-exports jdk.internal.le/jdk.internal.org.jline.reader.impl=ALL-UNNAMED" />
+      <module name="AdminGUI" options="" />
     </option>
   </component>
 </project>
