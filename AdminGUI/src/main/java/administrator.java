@@ -57,12 +57,12 @@ public class administrator {
                 // use comma as separator
                 String[] data = line.split(cvsSplitBy);
                 Request request = new Request();
-                request.status = data[0].charAt(0);
-                request.user = data[1];
-                request.email = data[2];
-                request.path = data[3];
-                request.host = data[4];
-                request.currentDate = data[5];
+                request.status = data[0].charAt(0);                             // column 1 [status] from request
+                request.user = data[1];                                         // column 2 [name] from request
+                request.email = data[2];                                        // column 3 [email] from request
+                request.path = data[3];                                         // column 4 [InstallPath] from request
+                request.host = data[4];                                         // column 5 [serviceTag] from request
+                request.currentDate = data[5];                                  // column 6 [creationDate] from request
                 if(request.status == 'n' || request.status == 'N') {            // new Request
                     connection.requestsPending.add(request);
                 } else if(request.status == 't' || request.status == 'T'){      // approved Request
@@ -89,15 +89,16 @@ public class administrator {
         // Create data for each dataColumns in the table
         Object[][] dataPending = new Object[requestsPending.size()][6];
         for (int i = 0; i < requestsPending.size(); i++) {
-            dataPending[i][0] = requestsPending.get(i).status;
-            dataPending[i][1] = requestsPending.get(i).user;
-            dataPending[i][2] = requestsPending.get(i).email;
-            dataPending[i][3] = requestsPending.get(i).path;
-            dataPending[i][4] = requestsPending.get(i).host;
-            dataPending[i][5] = requestsPending.get(i).currentDate;
+            dataPending[i][0] = requestsPending.get(i).status;                  // column 1 [status] from request
+            dataPending[i][1] = requestsPending.get(i).user;                    // column 2 [name] from request
+            dataPending[i][2] = requestsPending.get(i).email;                   // column 3 [email] from request
+            dataPending[i][3] = requestsPending.get(i).path;                    // column 4 [InstallPath] from request
+            dataPending[i][4] = requestsPending.get(i).host;                    // column 5 [serviceTag] from request
+            dataPending[i][5] = requestsPending.get(i).currentDate;             // column 6 [creationDate] from request
         }
         if (requestFrame == null) {
             // Create a new table instance
+            // right click HUB
             tablePending = new JTable(dataPending, columnNamesPending);
             tablePending.addMouseListener(new MouseAdapter() {
                 final JPopupMenu popupMenu = new JPopupMenu();
@@ -118,12 +119,12 @@ public class administrator {
                         }
                     }
                     if (SwingUtilities.isRightMouseButton(e)){
-                        popupMenu.add(approve);
-                        popupMenu.add(reject);
-                        popupMenu.add(copyPath);
-                        popupMenu.add(copyServiceTag);
-                        popupMenu.add(copyName);
-                        popupMenu.add(checkList);
+                        popupMenu.add(approve);                         // adding approve button to right-click HUB
+                        popupMenu.add(reject);                          // adding reject button to right-click HUB
+                        popupMenu.add(copyPath);                        // adding a InstallPath copy button to right-click HUB
+                        popupMenu.add(copyServiceTag);                  // adding a serviceTag copy button to right-click HUB
+                        popupMenu.add(copyName);                        // adding name copy button to right-click HUB
+                        popupMenu.add(checkList);                       // adding open checkList button to right-click HUB
                         popupMenu.show(e.getComponent(), e.getX(), e.getY());
                         approve.addActionListener(new ActionListener() {
                             @Override
@@ -131,11 +132,11 @@ public class administrator {
                                 answer = "approve";
                                 int selectedRow = tablePending.getSelectedRow();
                                 if (selectedRow != -1) {
-                                    Object selectedValueUser = tablePending.getValueAt(selectedRow, 1);
-                                    Object selectedValueEmail = tablePending.getValueAt(selectedRow, 2);
-                                    Object selectedValuePath = tablePending.getValueAt(selectedRow, 3);
-                                    Object selectedValueServiceTag = tablePending.getValueAt(selectedRow, 4);
-                                    Object selectedValueDate = tablePending.getValueAt(selectedRow, 5);
+                                    Object selectedValueUser = tablePending.getValueAt(selectedRow, 1);             // gathering the column information from the right-clicked row
+                                    Object selectedValueEmail = tablePending.getValueAt(selectedRow, 2);            // gathering the column information from the right-clicked row
+                                    Object selectedValuePath = tablePending.getValueAt(selectedRow, 3);             // gathering the column information from the right-clicked row
+                                    Object selectedValueServiceTag = tablePending.getValueAt(selectedRow, 4);       // gathering the column information from the right-clicked row
+                                    Object selectedValueDate = tablePending.getValueAt(selectedRow, 5);             // gathering the column information from the right-clicked row
 
                                     String newLine = "t" + "," + selectedValueUser.toString() + "," + selectedValueEmail.toString() + "," + selectedValuePath.toString() + "," + selectedValueServiceTag.toString() + "," + selectedValueDate.toString();
                                     List<String> lines = new ArrayList<>();
@@ -174,11 +175,11 @@ public class administrator {
                                 answer = "approve";
                                 int selectedRow = tablePending.getSelectedRow();
                                 if (selectedRow != -1) {
-                                    Object selectedValueUser = tablePending.getValueAt(selectedRow, 1);
-                                    Object selectedValueEmail = tablePending.getValueAt(selectedRow, 2);
-                                    Object selectedValuePath = tablePending.getValueAt(selectedRow, 3);
-                                    Object selectedValueServiceTag = tablePending.getValueAt(selectedRow, 4);
-                                    Object selectedValueDate = tablePending.getValueAt(selectedRow, 5);
+                                    Object selectedValueUser = tablePending.getValueAt(selectedRow, 1);            // gathering the column information from the right-clicked row
+                                    Object selectedValueEmail = tablePending.getValueAt(selectedRow, 2);           // gathering the column information from the right-clicked row
+                                    Object selectedValuePath = tablePending.getValueAt(selectedRow, 3);            // gathering the column information from the right-clicked row
+                                    Object selectedValueServiceTag = tablePending.getValueAt(selectedRow, 4);      // gathering the column information from the right-clicked row
+                                    Object selectedValueDate = tablePending.getValueAt(selectedRow, 5);            // gathering the column information from the right-clicked row
 
                                     String newLine = "f" + "," + selectedValueUser.toString() + "," + selectedValueEmail.toString() + "," + selectedValuePath.toString() + "," + selectedValueServiceTag.toString() + "," + selectedValueDate.toString();
                                     List<String> lines = new ArrayList<>();
@@ -272,7 +273,7 @@ public class administrator {
             requestFrame.pack();
             requestFrame.setVisible(true);
         } else {
-            // updating the tables
+            // updating the tables if the JFrame is already existing
             tablePending.setModel(new DefaultTableModel(dataPending, columnNamesPending));
             // updating the counter from the title bar
             requestFrame.setTitle("Requests:  [Pending " + requestsPending.size() + "]");
