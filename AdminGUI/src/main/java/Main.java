@@ -3,6 +3,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
+            // creating new administration tool
             administrator admin = new administrator("admin", 1, "admin", csvFile);
             admin.startAdmin();
             //AdminConnector adminConnector = new AdminConnector(multicastPORT);
