@@ -49,7 +49,7 @@ public class administrator {
         this.csvFile = csvFile;
         System.out.println("Admin " + admin + "  adminID " + adminID + "  adminPassword " + adminPassword);
     }
-    private static void checkRequests() {
+    static void checkRequests() {
         String line = "";
         String cvsSplitBy = ",";
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
