@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.io.*;
 import java.net.Inet4Address;
+import java.net.Socket;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -12,42 +13,12 @@ public class Console {
         consoleOutput.setEditable(false);
     }
 
-    public void processCommand(String command) {
-        if (command.matches("update client .*")) {
-            String[] splitCommand = command.split(" ");
-            String client = splitCommand[2];
-            startClientUpdate(client);
-        } else {
-            switch (command) {
-                case "update server":
-                    startUpdate();
-                    break;
-                case "update client":
-                    consoleOutput.append(" tippe a serviceTag -> example: update Client G2HS52 \n");
-                    break;
-                case "open disk management":
-                    openDiskManagement();
-                    break;
-                case "help":
-                    consoleOutput.append(" - update server -> starting Windows updates on server \n" +
-                            " - update client [serviceTag] -> starting Windows updates on client \n " +
-                            " - open disk management ->  Opening disk management \n" +
-                            " - approved clients -> list of all approved requests \n");
-                    break;
-                case "approved clients":
-                    try {
-                        getInfoPool();
-                    } catch (FileNotFoundException e) {
-                        throw new RuntimeException(e);
-                    }
-                    break;
-                default:
-                    consoleOutput.append(" Unknown command, tippe help for help\n");
-                    break;
-            }
-        }
+    public String processCommand(String message) {
+        System.out.println("processCommand");
+        AdminConnector.connectClient(message);
+        consoleOutput.append(message);
+        return message;
     }
-
     private void startUpdate() {
         consoleOutput.append(" Starting update...\n");
         try {
@@ -67,18 +38,15 @@ public class Console {
             e.printStackTrace();
         }
     }
-
     private void openDiskManagement() {
         consoleOutput.append(" Opening disk management...\n");
         // Open disk management
     }
-
     public JComponent getOutputComponent(String input) {
-        consoleOutput.append(" " + input + "\n");
+        consoleOutput.append("\n");
         processCommand(input);
         return consoleOutput;
     }
-
     public void getInfoPool() throws FileNotFoundException {
         File clientInfoFile = new File("ClientRequestCreator/src/main/java/Clients/clientInfos.txt");
         try {

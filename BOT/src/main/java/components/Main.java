@@ -8,6 +8,7 @@ public class Main {
         try {
             Bot bot = new Bot("Bot", 1, "Admin", csvFile);
             bot.startBot();
+            Connector.connect();
             //Connector connector = new Connector(multicastPORT);
             //connector.connect();
         } catch (Exception e) {

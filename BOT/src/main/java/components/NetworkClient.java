@@ -7,7 +7,7 @@ public class NetworkClient implements connection {
         this.multicastPORT = port;
     }
 
-    public void connect() {
+    public static void connect() {
         // Implement connection logic
     }
 }
