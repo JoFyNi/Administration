@@ -1,9 +1,6 @@
 import javax.swing.*;
 import java.io.*;
 import java.net.Inet4Address;
-import java.net.Socket;
-import java.util.Arrays;
-import java.util.Scanner;
 
 public class Console {
     private JTextArea consoleOutput;
@@ -15,7 +12,38 @@ public class Console {
 
     public String processCommand(String message) {
         System.out.println("processCommand");
-        AdminConnector.connectClient(message);
+
+        while (!message.equals("exit chat")) {
+            switch (message) {
+                case "update server":
+                    //startUpdate();
+                    consoleOutput.append("updating...");
+                    break;
+                case "update client":
+                    message = (" tippe a serviceTag -> example: update Client G2HS52 \n");
+                    consoleOutput.append("Client: " + message);
+                    break;
+                case "open disk management":
+                    //openDiskManagement();
+                    consoleOutput.append("Client: " + message);
+                    break;
+                case "help":
+                    message = (" - update server -> starting Windows updates on server \n" +
+                            " - update client [serviceTag] -> starting Windows updates on client \n " +
+                            " - open disk management ->  Opening disk management \n" +
+                            " - approved clients -> list of all approved requests \n");
+                    consoleOutput.append("Client: " + message);
+                    break;
+                case "approved clients":
+                    //getInfoPool();
+                    message = "information";
+                    consoleOutput.append("Client: " + message);
+                    break;
+                default:
+                    //consoleOutput.append(" Unknown command, tippe help for help\n");
+                    break;
+            }
+        }
         consoleOutput.append(message);
         return message;
     }
