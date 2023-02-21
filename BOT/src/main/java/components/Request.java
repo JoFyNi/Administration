@@ -76,7 +76,7 @@ public class Request {
         if (frame == null) {
             // Create a new table instance
             tablePending = new JTable(dataPending, columnNamesPending);
-            tableApproved = new JTable(dataRejected, columnNamesApproved);
+            tableApproved = new JTable(dataApproved, columnNamesApproved);
             tableRejected = new JTable(dataRejected, columnNamesRejected);
             frame = new JFrame("Requests:  [Pending " + requestsPending.size() + " / Approved " + requestsApproved.size() + " / Rejected " + requestsRejected.size() + "]");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

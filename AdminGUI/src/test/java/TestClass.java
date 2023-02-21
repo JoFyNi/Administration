@@ -1,15 +1,12 @@
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.Assert;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class TestClass {
 
@@ -36,7 +33,7 @@ public class TestClass {
 
         //überprüfen der einzelnen methoden
         // checkRequest
-        administrator.checkRequests();
+        administrator.checkRequests(connection.requestsPending, connection.requestsApproved, connection.requestsRejected);
         // updateRequest -> cleared alle Listen und schreibt sie neu (aktualisiert sie))
         administrator.updateRequests(connection.requestsPending, connection.requestsApproved, connection.requestsRejected);
         assertEquals(List, connection.requestsPending.size());
@@ -44,7 +41,7 @@ public class TestClass {
         assertEquals(List, connection.requestsRejected.size());
         // displayPending -> überprüfung, ob die gesamte (alle mit n/N) auf dem JTable abgebildet werden
         // die Buttons und mouse klicks die richtigen Werte weiter bzw. zurückgeben
-        administrator.displayPending(connection.requestsPending);
+        administrator.displayPending(connection.requestsPending, connection.requestsApproved, connection.requestsRejected);
         assertEquals(List, connection.requestsPending.size());
 
     }

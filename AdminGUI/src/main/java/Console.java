@@ -1,48 +1,66 @@
 import javax.swing.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.Inet4Address;
+import java.util.Scanner;
 
 public class Console {
-    private JTextArea consoleOutput;
+    public JTextArea consoleOutput;
 
     public Console() {
         consoleOutput = new JTextArea();
         consoleOutput.setEditable(false);
     }
-
+    public JComponent getOutputComponent(String input) {
+        if (input.equals("")) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            consoleOutput.append("\n");
+            processCommand(input);
+        }
+        return consoleOutput;
+    }
     public String processCommand(String message) {
         System.out.println("processCommand");
-
-        while (!message.equals("exit chat")) {
-            switch (message) {
-                case "update server":
-                    //startUpdate();
-                    consoleOutput.append("updating...");
-                    break;
-                case "update client":
-                    message = (" tippe a serviceTag -> example: update Client G2HS52 \n");
-                    consoleOutput.append("Client: " + message);
-                    break;
-                case "open disk management":
-                    //openDiskManagement();
-                    consoleOutput.append("Client: " + message);
-                    break;
-                case "help":
-                    message = (" - update server -> starting Windows updates on server \n" +
-                            " - update client [serviceTag] -> starting Windows updates on client \n " +
-                            " - open disk management ->  Opening disk management \n" +
-                            " - approved clients -> list of all approved requests \n");
-                    consoleOutput.append("Client: " + message);
-                    break;
-                case "approved clients":
-                    //getInfoPool();
-                    message = "information";
-                    consoleOutput.append("Client: " + message);
-                    break;
-                default:
-                    //consoleOutput.append(" Unknown command, tippe help for help\n");
-                    break;
+        switch (message) {
+            case "update server" -> {
+                startUpdate();
+                consoleOutput.append("updating...");
             }
+            case "update client" -> {
+                consoleOutput.append("type a serviceTag");
+                Scanner scanner = new Scanner(message);
+                message = scanner.next();
+                String serviceTag = message.substring(0, message.indexOf(" "));
+                message = (" tippe a serviceTag -> example: update Client G2HS52 \n");
+                consoleOutput.append("Client: " + message);
+            }
+            case "open disk management" -> {
+                openDiskManagement();
+                consoleOutput.append("Client: " + message);
+            }
+            case "help" -> {
+                message = (" - update server -> starting Windows updates on server \n" +
+                        " - update client [serviceTag] -> starting Windows updates on client \n " +
+                        " - open disk management ->  Opening disk management \n" +
+                        " - approved clients -> list of all approved requests \n");
+                consoleOutput.append("Client: " + message);
+            }
+            case "approved clients" -> {
+                getInfoPool();
+                message = "information";
+                consoleOutput.append("Client: " + message);
+            }
+            default -> {
+                consoleOutput.append("Error, unknown service");
+            }
+            //consoleOutput.append(" Unknown command, tippe help for help\n");
         }
         consoleOutput.append(message);
         return message;
@@ -70,12 +88,7 @@ public class Console {
         consoleOutput.append(" Opening disk management...\n");
         // Open disk management
     }
-    public JComponent getOutputComponent(String input) {
-        consoleOutput.append("\n");
-        processCommand(input);
-        return consoleOutput;
-    }
-    public void getInfoPool() throws FileNotFoundException {
+    public void getInfoPool() {
         File clientInfoFile = new File("ClientRequestCreator/src/main/java/Clients/clientInfos.txt");
         try {
             BufferedReader clientReader = new BufferedReader(new FileReader(clientInfoFile.getAbsolutePath()));

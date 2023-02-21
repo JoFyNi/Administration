@@ -17,6 +17,8 @@ import java.awt.BorderLayout;
 public class administrator {
     public static JFrame requestFrame;
     public static JTable tablePending;
+    public static JTable tableApproved;
+    public static JTable tableRejected;
     public static JTabbedPane tabbedPane;
     public static JSplitPane splitPane;
     public static JTextField input;
@@ -49,7 +51,7 @@ public class administrator {
         this.csvFile = csvFile;
         System.out.println("Admin " + admin + "  adminID " + adminID + "  adminPassword " + adminPassword);
     }
-    static void checkRequests() {
+    static void checkRequests(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
         String line = "";
         String cvsSplitBy = ",";
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
@@ -64,28 +66,30 @@ public class administrator {
                 request.host = data[4];                                         // column 5 [serviceTag] from request
                 request.currentDate = data[5];                                  // column 6 [creationDate] from request
                 if(request.status == 'n' || request.status == 'N') {            // new Request
-                    connection.requestsPending.add(request);
+                    requestsPending.add(request);
                 } else if(request.status == 't' || request.status == 'T'){      // approved Request
-                    connection.requestsApproved.add(request);
+                    requestsApproved.add(request);
                 } else if(request.status == 'f' || request.status == 'F'){      // rejected Request
-                    connection.requestsRejected.add(request);
+                    requestsRejected.add(request);
                 }
             }
-            System.out.println("pending: " + connection.requestsPending.size());
+            System.out.println("pending: " + requestsPending.size());
         } catch (Exception e) {
             System.exit(1);
         }
-        displayPending(connection.requestsPending);
+        displayPending(requestsPending, requestsApproved, requestsRejected);
     }
     public static void updateRequests(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
         requestsPending.clear();
         requestsApproved.clear();
         requestsRejected.clear();
-        checkRequests();
+        checkRequests(requestsPending, requestsApproved, requestsRejected);
     }
-    public static void displayPending(List<Request> requestsPending) {
+    public static void displayPending(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
         // Create column names
         String[] columnNamesPending = {"status", "user", "email", "path", "host", "date"};
+        String[] columnNamesApproved = {"status", "user", "email", "path", "host", "date"};
+        String[] columnNamesRejected = {"status", "user", "email", "path", "host", "date"};
         // Create data for each dataColumns in the table
         Object[][] dataPending = new Object[requestsPending.size()][6];
         for (int i = 0; i < requestsPending.size(); i++) {
@@ -96,10 +100,37 @@ public class administrator {
             dataPending[i][4] = requestsPending.get(i).host;                    // column 5 [serviceTag] from request
             dataPending[i][5] = requestsPending.get(i).currentDate;             // column 6 [creationDate] from request
         }
+        Object[][] dataApproved = new Object[requestsApproved.size()][6];
+        for (int i = 0; i < requestsApproved.size(); i++) {
+            dataApproved[i][0] = requestsApproved.get(i).status;
+            dataApproved[i][1] = requestsApproved.get(i).user;
+            dataApproved[i][2] = requestsApproved.get(i).email;
+            dataApproved[i][3] = requestsApproved.get(i).path;
+            dataApproved[i][4] = requestsPending.get(i).host;
+            dataApproved[i][5] = requestsPending.get(i).currentDate;
+        }
+        Object[][] dataRejected = new Object[requestsRejected.size()][6];
+        for (int i = 0; i < requestsRejected.size(); i++) {
+            dataRejected[i][0] = requestsRejected.get(i).status;
+            dataRejected[i][1] = requestsRejected.get(i).user;
+            dataRejected[i][2] = requestsRejected.get(i).email;
+            dataRejected[i][3] = requestsRejected.get(i).path;
+            dataRejected[i][4] = requestsPending.get(i).host;
+            dataRejected[i][5] = requestsPending.get(i).currentDate;
+        }
         if (requestFrame == null) {
             // Create a new table instance
             // right click HUB
             tablePending = new JTable(dataPending, columnNamesPending);
+            tableApproved = new JTable(dataApproved, columnNamesApproved);
+            tableRejected = new JTable(dataRejected, columnNamesRejected);
+            requestFrame = new JFrame("Requests:  [Pending " + requestsPending.size() + " / Approved " + requestsApproved.size() + " / Rejected " + requestsRejected.size() + "]");
+            requestFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            tabbedPane = new JTabbedPane();
+            console = new Console();
+            tabbedPane.addTab("Pending", new JScrollPane(tablePending));
+            tabbedPane.addTab("Approved", new JScrollPane(tableApproved));
+            tabbedPane.addTab("Rejected", new JScrollPane(tableRejected));
             tablePending.addMouseListener(new MouseAdapter() {
                 final JPopupMenu popupMenu = new JPopupMenu();
                 final JMenuItem approve = new JMenuItem("approve");
@@ -162,7 +193,7 @@ public class administrator {
                                     } catch (Exception ee) {
                                         System.out.println(ee.getMessage());
                                     }
-                                    updateRequests(connection.requestsPending, connection.requestsApproved, connection.requestsRejected);
+                                    updateRequests(requestsPending, requestsApproved, requestsRejected);
                                     DefaultTableModel model = (DefaultTableModel) tablePending.getModel();
                                     model.removeRow(selectedRow);
                                     model.insertRow(selectedRow, newLine.split(","));
@@ -205,7 +236,7 @@ public class administrator {
                                     } catch (Exception ee) {
                                         System.out.println(ee.getMessage());
                                     }
-                                    updateRequests(connection.requestsPending, connection.requestsApproved, connection.requestsRejected);
+                                    updateRequests(requestsPending, requestsApproved, requestsRejected);
                                     DefaultTableModel model = (DefaultTableModel) tablePending.getModel();
                                     model.removeRow(selectedRow);
                                     model.insertRow(selectedRow, newLine.split(","));
@@ -259,24 +290,23 @@ public class administrator {
                 input.setText("");
                 // Verarbeiten Sie die Eingabe hier
             });
-            requestFrame = new JFrame("[Admin]Requests:  [Pending " + requestsPending.size() + "]");
-            requestFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            tabbedPane = new JTabbedPane();
-            console = new Console();
-            tabbedPane.addTab("Pending", new JScrollPane(tablePending));
             splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabbedPane, new JScrollPane(console.getOutputComponent(input.getText())));
             splitPane.setResizeWeight(0.7);
+            //requestFrame.add(tabbedPane);
             requestFrame.add(splitPane, BorderLayout.CENTER);
             requestFrame.add(input, BorderLayout.SOUTH);
-            //requestFrame.add(tabbedPane);
-            requestFrame.setSize(1200, 1600);
             requestFrame.pack();
+            requestFrame.setSize(1200, 800);
             requestFrame.setVisible(true);
+
         } else {
             // updating the tables if the JFrame is already existing
             tablePending.setModel(new DefaultTableModel(dataPending, columnNamesPending));
+            tableApproved.setModel(new DefaultTableModel(dataApproved, columnNamesApproved));
+            tableRejected.setModel(new DefaultTableModel(dataRejected, columnNamesRejected));
             // updating the counter from the title bar
-            requestFrame.setTitle("Requests:  [Pending " + requestsPending.size() + "]");
+            requestFrame.setTitle("Requests:  [Pending " + requestsPending.size() + " / Approved " + requestsApproved.size() + " / Rejected " + requestsRejected.size() + "]");
+
         }
     }
 
