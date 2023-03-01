@@ -26,7 +26,7 @@ public class administrator {
     private String admin = "Admin";
     private int adminID = 1111;
     private String adminPassword = "123456";
-    private static String csvFile;
+    static String csvFile;
     static Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     static char[] newStatus = {'t','f','n'};
 
