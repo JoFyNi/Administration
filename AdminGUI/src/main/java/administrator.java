@@ -22,6 +22,7 @@ public class administrator {
     public static JTabbedPane tabbedPane;
     public static JSplitPane splitPane;
     public static JTextField input;
+    public static JLabel license = new JLabel("2022-2023 by JoFyNi");
     private static Console console;
     private String admin = "Admin";
     private int adminID = 1111;
@@ -292,9 +293,10 @@ public class administrator {
             });
             splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabbedPane, new JScrollPane(console.getOutputComponent(input.getText())));
             splitPane.setResizeWeight(0.7);
-            //requestFrame.add(tabbedPane);
             requestFrame.add(splitPane, BorderLayout.CENTER);
             requestFrame.add(input, BorderLayout.SOUTH);
+            license.setFont(new Font("Leelawadee UI", Font.BOLD, 12));
+            requestFrame.add(license, BorderLayout.PAGE_START);
             requestFrame.pack();
             requestFrame.setSize(1200, 800);
             requestFrame.setVisible(true);

@@ -46,7 +46,7 @@ public class TestClass {
 
     }
 
-    public static class HasTempFolder {
+    public static class hasTempFolder {
         @Rule
         public TemporaryFolder folder = new TemporaryFolder();
 
