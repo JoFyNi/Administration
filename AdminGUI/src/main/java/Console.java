@@ -32,18 +32,19 @@ public class Console {
             case "update server" -> {
                 startUpdate();
                 consoleOutput.append("updating...");
+                message = "updating...";
             }
             case "update client" -> {
                 consoleOutput.append("type a serviceTag");
                 Scanner scanner = new Scanner(message);
                 message = scanner.next();
-                String serviceTag = message.substring(0, message.indexOf(" "));
                 message = (" tippe a serviceTag -> example: update Client G2HS52 \n");
                 consoleOutput.append("Client: " + message);
             }
             case "open disk management" -> {
                 openDiskManagement();
                 consoleOutput.append("Client: " + message);
+                message = "Client: " + message;
             }
             case "help" -> {
                 message = (" - update server -> starting Windows updates on server \n" +
@@ -59,6 +60,7 @@ public class Console {
             }
             default -> {
                 consoleOutput.append("Error, unknown service");
+                message = "Error, unknown service";
             }
             //consoleOutput.append(" Unknown command, tippe help for help\n");
         }
