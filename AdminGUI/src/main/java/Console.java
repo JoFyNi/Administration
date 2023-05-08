@@ -28,41 +28,38 @@ public class Console {
     }
     public String processCommand(String message) {
         System.out.println("processCommand");
-        switch (message) {
-            case "update server" -> {
-                startUpdate();
-                consoleOutput.append("updating...");
-                message = "updating...";
-            }
-            case "update client" -> {
-                consoleOutput.append("type a serviceTag");
-                Scanner scanner = new Scanner(message);
-                message = scanner.next();
-                message = (" tippe a serviceTag -> example: update Client G2HS52 \n");
-                consoleOutput.append("Client: " + message);
-            }
-            case "open disk management" -> {
-                openDiskManagement();
-                consoleOutput.append("Client: " + message);
-                message = "Client: " + message;
-            }
-            case "help" -> {
-                message = (" - update server -> starting Windows updates on server \n" +
-                        " - update client [serviceTag] -> starting Windows updates on client \n " +
-                        " - open disk management ->  Opening disk management \n" +
-                        " - approved clients -> list of all approved requests \n");
-                consoleOutput.append("Client: " + message);
-            }
-            case "approved clients" -> {
-                getInfoPool();
-                message = "information";
-                consoleOutput.append("Client: " + message);
-            }
-            default -> {
-                consoleOutput.append("Error, unknown service");
-                message = "Error, unknown service";
-            }
-            //consoleOutput.append(" Unknown command, tippe help for help\n");
+        if (message.equals("")) {
+            consoleOutput.append("Error, unknown service");
+            message = "Error, unknown service";
+        }
+        else if (message.contains("update server")) {
+            startUpdate();
+            consoleOutput.append("updating...");
+            message = "updating...";
+        }
+        else if (message.contains("update client")) {
+            consoleOutput.append("type a serviceTag");
+            Scanner scanner = new Scanner(message);
+            message = scanner.next();
+            message = (" tippe a serviceTag -> example: update Client G2HS52 \n");
+            consoleOutput.append("Client: " + message);
+        }
+        else if (message.contains("open disk management")) {
+            openDiskManagement();
+            consoleOutput.append("Client: " + message);
+            message = "Client: " + message;
+        }
+        else if (message.contains("help")) {
+            message = (" - update server -> starting Windows updates on server \n" +
+                    " - update client [serviceTag] -> starting Windows updates on client \n " +
+                    " - open disk management ->  Opening disk management \n" +
+                    " - approved clients -> list of all approved requests \n");
+            consoleOutput.append("Client: " + message);
+        }
+        else if (message.contains("approved clients")) {
+            getInfoPool();
+            message = "information";
+            consoleOutput.append("Client: " + message);
         }
         consoleOutput.append(message);
         return message;
