@@ -29,7 +29,7 @@ public class administrator {
     private String adminPassword = "123456";
     static String csvFile;
     static Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-    static char[] newStatus = {'t','f','n'};
+    static char[] STATUS = {'t','f','n'};
 
     public administrator() {
     }

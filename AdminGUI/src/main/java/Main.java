@@ -6,6 +6,9 @@ public class Main {
             // creating new administration tool
             administrator admin = new administrator("admin", 1, "admin", csvFile);
             admin.startAdmin();
+
+            Monitoring MS = new Monitoring();
+            MS.monitorSystem();
         } catch (Exception e) {
             e.printStackTrace();
             main(args);

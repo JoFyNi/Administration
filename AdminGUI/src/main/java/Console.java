@@ -76,9 +76,9 @@ public class Console {
     private void startClientUpdate(String client) {
         consoleOutput.append(" Starting update on " + client + "\n");
         try {
-            String sendCommand = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File src/main/java/Admin/Commands/WindowsUpdate.ps1 " + client;
-            System.out.println(sendCommand);
-            Runtime.getRuntime().exec(sendCommand);
+            String updateCommand = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File src/main/java/Admin/Commands/WindowsUpdate.ps1 " + client;
+            System.out.println(updateCommand);
+            Runtime.getRuntime().exec(updateCommand);
         } catch (IOException e) {
             e.printStackTrace();
         }

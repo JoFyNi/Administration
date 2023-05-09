@@ -28,6 +28,21 @@
             <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.tencent.devops.ci-plugins</groupId>
+            <artifactId>sigar</artifactId>
+            <version>1.7.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.mwiede</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.2.7</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.mwiede</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.2.7</version>
+        </dependency>
     </dependencies>
 
 </project>
