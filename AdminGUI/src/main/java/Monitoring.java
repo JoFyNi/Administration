@@ -32,7 +32,7 @@ public class Monitoring {
                 //if (cpuUsage > 80) {
                 //    sendMessage("CPU usage is above 80%!");
                 //}
-                if (freeSpace < 1000000000) { // weniger als 1GB freier Speicherplatz
+                if (freeSpace < 1000000000) { // weniger als 1 GB freier Speicherplatz
                     sendMessage("Low disk space!");
                 }
                 if (diskUsage > 90) {
