@@ -2,6 +2,8 @@ package Clients;
 
 
 import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -56,12 +58,34 @@ public class user {
                     //Bot.getByAddress(Inet4Address.getLocalHost().toString(), Inet4Address.getLocalHost().getAddress());
                     String clientInformation = name + " , " + email + " , " + path + " , " + Inet4Address.getLocalHost() + " , " + currentDate + "\n";
                     //Bot.getInformation(clientInformation, Runtime.getRuntime().availableProcessors(), Runtime.getRuntime().freeMemory(), Runtime.getRuntime().totalMemory());
+                    copyHardwareInfo(name);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
                 dialog.dispose();
             }
         });
+    }
+    public static void copyHardwareInfo(String name) throws IOException{
+        try {
+            String filePath = "./" + name + ".txt";
+            // Use "dxdiag /t" variant to redirect output to a given file
+            ProcessBuilder pb = new ProcessBuilder("cmd.exe","/c","dxdiag","/t",filePath);
+            System.out.println("-- Executing dxdiag command --");
+            Process p = pb.start();
+            p.waitFor();
+
+            BufferedReader br = new BufferedReader(new FileReader(filePath));
+            String line;
+            System.out.println(String.format("-- Printing %1$1s info --",filePath));
+            while((line = br.readLine()) != null){
+                if(line.trim().startsWith("Card name:") || line.trim().startsWith("Current Mode:")){
+                    System.out.println(line.trim());
+                }
+            }
+        } catch (IOException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
     }
     public static boolean addRequest(String requestTag) throws IOException {
         FileWriter fileWriter = new FileWriter(csvFile, true);

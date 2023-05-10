@@ -1,3 +1,8 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
 public class ClientHardware implements AdapterInterface {
 
     /*
@@ -18,9 +23,17 @@ public class ClientHardware implements AdapterInterface {
 
     public ClientHardware() {
         // CLIENT(CPU, RAM, GPU, HardDrive)
+        CPU(50,50);
+        RAM(50);
+        GPU(50,50);
+        HardDrive(50,50);
     }
 
-    public int CPU (int overload, int time) {
+    public void CPU (int overload, int time) {
+        /* Total number of processors or cores available to the JVM */
+        System.out.println("Available processors (cores): " +
+                Runtime.getRuntime().availableProcessors());
+
         // get Hardware Information
         /* get overload / used performance
             -> how long is the overload (100% only)
@@ -31,32 +44,73 @@ public class ClientHardware implements AdapterInterface {
             System.out.println("CPU overload: " + overload + "% for " + time + " seconds" );
         }
         // look for needed upgrade (compare with GPU and RAM)
-        return overload;
     }
 
-    public int RAM (int overload) {
+    public void RAM (int overload) {
+        /* Total amount of free memory available to the JVM */
+        System.out.println("Free memory (bytes): " +
+                Runtime.getRuntime().freeMemory());
+
+        /* This will return Long.MAX_VALUE if there is no preset limit */
+        long maxMemory = Runtime.getRuntime().maxMemory();
+        /* Maximum amount of memory the JVM will attempt to use */
+        System.out.println("Maximum memory (bytes): " +
+                (maxMemory == Long.MAX_VALUE ? "no limit" : maxMemory));
+
+        /* Total memory currently available to the JVM */
+        System.out.println("Total memory available to JVM (bytes): " +
+                Runtime.getRuntime().totalMemory());
+
         if (overload > 90) {
             System.out.println("RAM overload: " + overload +"%");
         }
-        return overload;
     }
 
-    public int GPU (int overload, int time) {
+    public void GPU (int overload, int time) {
+        try {
+
+            String filePath = "./foo.txt";
+            // Use "dxdiag /t" variant to redirect output to a given file
+            ProcessBuilder pb = new ProcessBuilder("cmd.exe","/c","dxdiag","/t",filePath);
+            System.out.println("-- Executing dxdiag command --");
+            Process p = pb.start();
+            p.waitFor();
+
+            BufferedReader br = new BufferedReader(new FileReader(filePath));
+            String line;
+            System.out.println(String.format("-- Printing %1$1s info --",filePath));
+            while((line = br.readLine()) != null){
+                if(line.trim().startsWith("Card name:") || line.trim().startsWith("Current Mode:")){
+                    System.out.println(line.trim());
+                }
+            }
+        } catch (IOException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
         // time per overload (100% only)
         if (overload == 100 && time < 10000) {
             System.out.println("GPU overload: " + overload + "% for " + time + " seconds" );
         }
-        return overload;
     }
 
-    public int HardDrive (int overload, int time) {
+    public void HardDrive (int overload, int time) {
+        /* Get a list of all filesystem roots on this system */
+        File[] roots = File.listRoots();
+
+        /* For each filesystem root, print some info */
+        for (File root : roots) {
+            System.out.println("File system root: " + root.getAbsolutePath());
+            System.out.println("Total space (bytes): " + root.getTotalSpace());
+            System.out.println("Free space (bytes): " + root.getFreeSpace());
+            System.out.println("Usable space (bytes): " + root.getUsableSpace());
+        }
+
         // time per overload (100% only)
         if (overload == 100 && time < 10000) {
             System.out.println("HardDrive overload: " + overload + "% for " + time + " seconds" );
         }
         // value
         // writing/ reading speed
-        return overload;
     }
 
 
