@@ -189,7 +189,7 @@ public class administrator {
                                             }
                                             bw.close();
                                         } else {
-                                            System.out.println("Line already exists, no new line created");
+                                            System.out.println("Line already exists!");
                                         }
                                     } catch (Exception ee) {
                                         System.out.println(ee.getMessage());
