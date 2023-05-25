@@ -14,7 +14,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.awt.BorderLayout;
 
-public class administrator {
+public class Administrator {
+    /**
+     * initialize JFrame components and variables
+     */
     public static JFrame requestFrame;
     public static JTable tablePending;
     public static JTable tableApproved;
@@ -31,8 +34,10 @@ public class administrator {
     static Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     static char[] STATUS = {'t','f','n'};
 
-    public administrator() {
-    }
+    /**
+     * start methode -> starts a timer that checks for requests and starts / updates the JTables
+     * @return 0 when the process get terminated
+     */
     public int startAdmin() {
         java.util.Timer timer = new Timer();
         TimerTask task = new TimerTask() {
@@ -45,13 +50,29 @@ public class administrator {
         return 0;
     }
     public static String answer = "pending";
-    public administrator(String admin, int adminID, String adminPassword, String csvFile) {
+
+    /**
+     * initialize the administrator methode
+     * @param admin name
+     * @param adminID id
+     * @param adminPassword password
+     * @param csvFile file name / path name
+     */
+    public Administrator(String admin, int adminID, String adminPassword, String csvFile) {
         this.admin = admin;
         this.adminID = adminID;
         this.adminPassword = adminPassword;
         this.csvFile = csvFile;
         System.out.println("Admin " + admin + "  adminID " + adminID + "  adminPassword " + adminPassword);
     }
+
+    /**
+     * methode that generates the table content and initialize the display (GUI with JTables)
+     * -> reading csvFile and sorting them into the columns
+     * @param requestsPending Pending-request table
+     * @param requestsApproved Approved-request table
+     * @param requestsRejected Rejected-request table
+     */
     static void checkRequests(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
         String line = "";
         String cvsSplitBy = ",";
@@ -80,12 +101,30 @@ public class administrator {
         }
         displayPending(requestsPending, requestsApproved, requestsRejected);
     }
+
+    /**
+     * update methode -> refresh the JTables / List<Request>
+     * @param requestsPending Pending-Request JTable / List
+     * @param requestsApproved Approved-Request JTable / List
+     * @param requestsRejected Rejected-Request JTable / List
+     */
     public static void updateRequests(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
         requestsPending.clear();
         requestsApproved.clear();
         requestsRejected.clear();
         checkRequests(requestsPending, requestsApproved, requestsRejected);
     }
+
+    /**
+     * creates the JTables with associated Lists
+     * connects the JFrame with all components (initialisation from every component)
+     * @param requestsPending Pending-Request JTable / List
+     * @param requestsApproved Approved-Request JTable / List
+     * @param requestsRejected Rejected-Request JTable / List
+     *
+     * actionListener for the buttons and the klick events
+     * finally start the JFrame
+     */
     public static void displayPending(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
         // Create column names
         String[] columnNamesPending = {"status", "user", "email", "path", "host", "date"};

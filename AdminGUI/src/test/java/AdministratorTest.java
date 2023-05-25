@@ -13,8 +13,8 @@ public class AdministratorTest {
         List<Request> requestsPending = new ArrayList<>();
         List<Request> requestsApproved = new ArrayList<>();
         List<Request> requestsRejected = new ArrayList<>();
-        administrator.csvFile = csvFile;
-        administrator.checkRequests(requestsPending, requestsApproved, requestsRejected);
+        Administrator.csvFile = csvFile;
+        Administrator.checkRequests(requestsPending, requestsApproved, requestsRejected);
         assertEquals(3, requestsPending.size());
         assertEquals(1, requestsApproved.size());
         assertEquals(1, requestsRejected.size());
@@ -25,8 +25,8 @@ public class AdministratorTest {
         List<Request> requestsPending = new ArrayList<>();
         List<Request> requestsApproved = new ArrayList<>();
         List<Request> requestsRejected = new ArrayList<>();
-        administrator.csvFile = csvFile;
-        administrator.updateRequests(requestsPending, requestsApproved, requestsRejected);
+        Administrator.csvFile = csvFile;
+        Administrator.updateRequests(requestsPending, requestsApproved, requestsRejected);
         assertEquals(3, requestsPending.size());
         assertEquals(1, requestsApproved.size());
         assertEquals(1, requestsRejected.size());

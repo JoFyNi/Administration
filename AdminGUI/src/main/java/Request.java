@@ -11,8 +11,6 @@ public class Request {
     public String currentDate;
     static Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     static char[] newStatus = {'t','f','n'};
-    public Request(String test) {
-    }
     public Request() {
     }
     public Request(char status, String user, String email, String path, String host, String currentDate) {

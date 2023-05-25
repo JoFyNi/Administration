@@ -4,7 +4,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             // creating new administration tool
-            administrator admin = new administrator("admin", 1, "admin", csvFile);
+            Administrator admin = new Administrator("admin", 1, "admin", csvFile);
             admin.startAdmin();
 
             Monitoring MS = new Monitoring();

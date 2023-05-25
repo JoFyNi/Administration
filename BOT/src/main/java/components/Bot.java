@@ -13,11 +13,25 @@ public class Bot {
     private final String csvFile;
 
     //List to hold "Request" objects
+
+    /**
+     * initializes the Bot Class
+     * @param botName name
+     * @param botId id
+     * @param botType typ (for witch usage)
+     * @param csvFile file name / path name
+     */
     public Bot(String botName, int botId, String botType, String csvFile) {
         this.csvFile = csvFile;
         System.out.println("Bot: [" + botName + ":" + botId + "  " + botType + " permission" + "] starting");
     }
 
+    /**
+     * automatisation for installations -> request (if Approved -> installation starts)
+     * @param user name (first name, last name)
+     * @param serviceTag Computer name
+     * @param path installation path (Client Computer)
+     */
     public static void startInstallationOnClient(String user, String serviceTag, String path) {
         System.out.println("Installation: " + path + "  >>>  " + user + ":" + serviceTag);
         String Administrator = " "; // add Administrator (local admin)
@@ -72,6 +86,14 @@ public class Bot {
         //}
     }
 
+    /**
+     * collects information about the users hardware
+     * @param clientInfo general information about the client
+     * @param processor processor
+     * @param freeMemory free RAM
+     * @param totalMemory total RAM
+     * @throws IOException
+     */
     public static void getInformation(String clientInfo, int processor, long freeMemory, long totalMemory) throws IOException {
         System.out.println(clientInfo + "\n" + "processor: " + processor + "  freeMemory: " + freeMemory + "  totalMemory: " + totalMemory);
         File clientInfoFile = new File("src/main/java/Clients/clientInfos.txt");
@@ -81,12 +103,23 @@ public class Bot {
         fileWriter.close();
     }
 
+    /**
+     * get Network information about the user
+     * @param host Computer name
+     * @param addr ip address
+     * @return return host and addr information
+     * @throws UnknownHostException
+     */
     public static InetAddress getByAddress(String host, byte[] addr) throws UnknownHostException {
         System.out.println("Host Name: " + host);
         System.out.println("IP Address: " + addr);
         return InetAddress.getByAddress(host, addr);
     }
 
+    /**
+     * starts the BOT with a timer
+     * refresh the tables every 10 seconds
+     */
     public void startBot() {
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
@@ -98,6 +131,12 @@ public class Bot {
         timer.schedule(task, 0, 10000);     // run all 10 seconds
     }
 
+    /**
+     * checks the JTables for new requests and already existing requests
+     * @param requestsPending Pending-Request JTable / List
+     * @param requestsApproved Approved-Request JTable / List
+     * @param requestsRejected Rejected-Request JTable / List
+     */
     private void checkRequests(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
         String line = "";
         String cvsSplitBy = ",";
@@ -127,6 +166,12 @@ public class Bot {
         Request.displayRequests(requestsPending, requestsApproved, requestsRejected);
     }
 
+    /**
+     * refresh the JTables and List<Request>
+     * @param requestsPending Pending-Request JTable / List
+     * @param requestsApproved Approved-Request JTable / List
+     * @param requestsRejected Rejected-Request JTable / List
+     */
     public void updateRequests(List<Request> requestsPending, List<Request> requestsApproved, List<Request> requestsRejected) {
         requestsPending.clear();
         requestsApproved.clear();

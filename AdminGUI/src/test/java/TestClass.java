@@ -17,7 +17,7 @@ public class TestClass {
 
         // starten des admin programms (allgemein)
         String csvFile = "AdminGUI/src/main/db/fourHeader.csv";
-        administrator admin = new administrator("admin", 1, "admin", csvFile);
+        Administrator admin = new Administrator("admin", 1, "admin", csvFile);
         Assert.assertEquals(0, admin.startAdmin());
 
         //String pending = "n";
@@ -33,15 +33,15 @@ public class TestClass {
 
         //überprüfen der einzelnen methoden
         // checkRequest
-        administrator.checkRequests(connection.requestsPending, connection.requestsApproved, connection.requestsRejected);
+        Administrator.checkRequests(connection.requestsPending, connection.requestsApproved, connection.requestsRejected);
         // updateRequest -> cleared alle Listen und schreibt sie neu (aktualisiert sie))
-        administrator.updateRequests(connection.requestsPending, connection.requestsApproved, connection.requestsRejected);
+        Administrator.updateRequests(connection.requestsPending, connection.requestsApproved, connection.requestsRejected);
         assertEquals(List, connection.requestsPending.size());
         assertEquals(List, connection.requestsApproved.size());
         assertEquals(List, connection.requestsRejected.size());
         // displayPending -> überprüfung, ob die gesamte (alle mit n/N) auf dem JTable abgebildet werden
         // die Buttons und mouse klicks die richtigen Werte weiter bzw. zurückgeben
-        administrator.displayPending(connection.requestsPending, connection.requestsApproved, connection.requestsRejected);
+        Administrator.displayPending(connection.requestsPending, connection.requestsApproved, connection.requestsRejected);
         assertEquals(List, connection.requestsPending.size());
 
     }
