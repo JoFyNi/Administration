@@ -13,6 +13,13 @@ public class Console {
         consoleOutput = new JTextArea();
         consoleOutput.setEditable(false);
     }
+
+    /**
+     * JComponent -> part of the main JFrame
+     * serves as console
+     * @param input text input from user
+     * @return reply
+     */
     public JComponent getOutputComponent(String input) {
         if (input.equals("")) {
             try {
@@ -26,6 +33,12 @@ public class Console {
         }
         return consoleOutput;
     }
+
+    /**
+     * selection of reply's for different text requests
+     * @param message text input from user
+     * @return answer
+     */
     public String processCommand(String message) {
         System.out.println("processCommand");
         if (message.equals("")) {
@@ -64,6 +77,10 @@ public class Console {
         consoleOutput.append(message);
         return message;
     }
+
+    /**
+     * starting update
+     */
     private void startUpdate() {
         consoleOutput.append(" Starting update...\n");
         try {
@@ -73,6 +90,11 @@ public class Console {
             e.printStackTrace();
         }
     }
+
+    /**
+     * starting update of the clients computer
+     * @param client serviceTag (computer name)
+     */
     private void startClientUpdate(String client) {
         consoleOutput.append(" Starting update on " + client + "\n");
         try {
@@ -83,10 +105,18 @@ public class Console {
             e.printStackTrace();
         }
     }
+
+    /**
+     * opens the disk manager for general overview
+     */
     private void openDiskManagement() {
         consoleOutput.append(" Opening disk management...\n");
         // Open disk management
     }
+
+    /**
+     * methode to gather user information
+     */
     public void getInfoPool() {
         File clientInfoFile = new File("ClientRequestCreator/src/main/java/Clients/clientInfos.txt");
         try {
