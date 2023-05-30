@@ -14,7 +14,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.awt.BorderLayout;
 
-public class Administrator {
+public class Administrator extends Request implements connection {
     /**
      * initialize JFrame components and variables
      */
@@ -182,6 +182,11 @@ public class Administrator {
                 final JLabel label = new JLabel();
                 String selectedValue = null;
 
+                /**
+                 * actionListener -> mouseListener
+                 * @param e the event to be processed
+                 * buttons:  approve, reject, copy path, copy service tag, copy name, open a checklist
+                 */
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (SwingUtilities.isLeftMouseButton(e)){
@@ -203,11 +208,12 @@ public class Administrator {
                                 answer = "approve";
                                 int selectedRow = tablePending.getSelectedRow();
                                 if (selectedRow != -1) {
-                                    Object selectedValueUser = tablePending.getValueAt(selectedRow, 1);             // gathering the column information from the right-clicked row
-                                    Object selectedValueEmail = tablePending.getValueAt(selectedRow, 2);            // gathering the column information from the right-clicked row
-                                    Object selectedValuePath = tablePending.getValueAt(selectedRow, 3);             // gathering the column information from the right-clicked row
-                                    Object selectedValueServiceTag = tablePending.getValueAt(selectedRow, 4);       // gathering the column information from the right-clicked row
-                                    Object selectedValueDate = tablePending.getValueAt(selectedRow, 5);             // gathering the column information from the right-clicked row
+                                    // gathering the column information from the right-clicked row
+                                    Object selectedValueUser = tablePending.getValueAt(selectedRow, 1);
+                                    Object selectedValueEmail = tablePending.getValueAt(selectedRow, 2);
+                                    Object selectedValuePath = tablePending.getValueAt(selectedRow, 3);
+                                    Object selectedValueServiceTag = tablePending.getValueAt(selectedRow, 4);
+                                    Object selectedValueDate = tablePending.getValueAt(selectedRow, 5);
 
                                     String newLine = "t" + "," + selectedValueUser.toString() + "," + selectedValueEmail.toString() + "," + selectedValuePath.toString() + "," + selectedValueServiceTag.toString() + "," + selectedValueDate.toString();
                                     List<String> lines = new ArrayList<>();
@@ -246,11 +252,12 @@ public class Administrator {
                                 answer = "approve";
                                 int selectedRow = tablePending.getSelectedRow();
                                 if (selectedRow != -1) {
-                                    Object selectedValueUser = tablePending.getValueAt(selectedRow, 1);            // gathering the column information from the right-clicked row
-                                    Object selectedValueEmail = tablePending.getValueAt(selectedRow, 2);           // gathering the column information from the right-clicked row
-                                    Object selectedValuePath = tablePending.getValueAt(selectedRow, 3);            // gathering the column information from the right-clicked row
-                                    Object selectedValueServiceTag = tablePending.getValueAt(selectedRow, 4);      // gathering the column information from the right-clicked row
-                                    Object selectedValueDate = tablePending.getValueAt(selectedRow, 5);            // gathering the column information from the right-clicked row
+                                    // gathering the column information from the right-clicked row
+                                    Object selectedValueUser = tablePending.getValueAt(selectedRow, 1);
+                                    Object selectedValueEmail = tablePending.getValueAt(selectedRow, 2);
+                                    Object selectedValuePath = tablePending.getValueAt(selectedRow, 3);
+                                    Object selectedValueServiceTag = tablePending.getValueAt(selectedRow, 4);
+                                    Object selectedValueDate = tablePending.getValueAt(selectedRow, 5);
 
                                     String newLine = "f" + "," + selectedValueUser.toString() + "," + selectedValueEmail.toString() + "," + selectedValuePath.toString() + "," + selectedValueServiceTag.toString() + "," + selectedValueDate.toString();
                                     List<String> lines = new ArrayList<>();

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Bot {
+public class Bot extends Request implements connection{
     private final String csvFile;
 
     //List to hold "Request" objects
@@ -94,7 +94,7 @@ public class Bot {
      * @param totalMemory total RAM
      * @throws IOException
      */
-    public static void getInformation(String clientInfo, int processor, long freeMemory, long totalMemory) throws IOException {
+    public static void createInformationLog(String clientInfo, int processor, long freeMemory, long totalMemory) throws IOException {
         System.out.println(clientInfo + "\n" + "processor: " + processor + "  freeMemory: " + freeMemory + "  totalMemory: " + totalMemory);
         File clientInfoFile = new File("src/main/java/Clients/clientInfos.txt");
         FileWriter fileWriter = new FileWriter(clientInfoFile, true);

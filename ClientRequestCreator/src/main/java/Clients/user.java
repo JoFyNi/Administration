@@ -17,6 +17,13 @@ public class user {
     private static String email;
     private static String path;
     private static final Date currentDate = new Date();
+
+    /**
+     * dialog window for the user to create a request.
+     * Input files for full name and email
+     * selectable .exe for the installation path
+     * @throws IOException
+     */
     public static void createRequest() throws IOException  {
         JDialog dialog = new JDialog();
         dialog.setTitle("request");
@@ -66,6 +73,13 @@ public class user {
             }
         });
     }
+
+    /**
+     * collecting hardware information from the requested client
+     * @param name serviceTag
+     * @throws IOException
+     * writing the information's into a log file
+     */
     public static void copyHardwareInfo(String name) throws IOException{
         try {
             String filePath = "./" + name + ".txt";
@@ -87,12 +101,20 @@ public class user {
             ex.printStackTrace();
         }
     }
+
+    /**
+     * adding Request tot table
+     * @param requestTag installation request / path / etc...
+     * @return true for next steps
+     * @throws IOException
+     */
     public static boolean addRequest(String requestTag) throws IOException {
         FileWriter fileWriter = new FileWriter(csvFile, true);
         fileWriter.append(requestTag);
         fileWriter.close();
         return true;
     }
+
     public static void main(String[] args) throws IOException {
         user user = new user();
         createRequest();

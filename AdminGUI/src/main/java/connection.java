@@ -14,6 +14,4 @@ public interface connection {
     public static final List<Request> requestsPending = new ArrayList<>();
     public static final List<Request> requestsApproved = new ArrayList<>();
     public static final List<Request> requestsRejected = new ArrayList<>();
-
-    void connect();
 }
