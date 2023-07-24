@@ -71,9 +71,9 @@ public class Bot extends Request implements connection{
             channel.disconnect();
             session.disconnect();
         } catch (JSchException e) {
-            System.out.println("JSchException (startInstallationOnClient)");
+            System.out.println("JSchException (at startInstallationOnClient()) \n" + e.getMessage());
         } catch (IOException e) {
-            System.out.println("IOException (startInstallationOnClient)");
+            System.out.println("IOException (at startInstallationOnClient()) \n" + e.getMessage());
         }
 
         // String connectToClient = System.getProperty(serviceTag);

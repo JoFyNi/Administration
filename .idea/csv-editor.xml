@@ -3,6 +3,20 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
+        <entry key="C:\Users\j.nievelstein\Java\Administration\AdminGUI\src\main\db\fourHeader.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="C:\Users\j.nievelstein\Java\Administration\AdminGUI\src\main\db\test.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\AdminGUI\src\main\db\fourHeader.csv">
           <value>
             <Attribute>
